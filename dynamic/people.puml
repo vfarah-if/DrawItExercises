@@ -1,0 +1,30 @@
+@startuml Test this working quickly
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Dynamic.puml
+
+HIDE_STEREOTYPE()
+LAYOUT_AS_SKETCH()
+
+Person(a, "A")
+Person(b, "B")
+Person(c, "C")
+Person(d, "D")
+Person(e, "E")
+
+' In rare cases, you can force the layout of objects which have no relationships by using:
+Lay_U(a, b)
+Lay_R(a, c)
+Lay_D(a, d)
+Lay_L(a, e)
+
+Person(x, "X")
+System(s1, "S1")
+System(s2, "S2")
+System(s3, "S3")
+System(s4, "S4")
+
+Rel_U(x, s1, "uses")
+Rel_R(x, s2, "uses")
+Rel_D(x, s3, "uses")
+Rel_L(x, s4, "label")
+
+@enduml
