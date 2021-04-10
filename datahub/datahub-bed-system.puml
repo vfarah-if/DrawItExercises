@@ -12,7 +12,7 @@ title System Context diagram for DIT Datahub and BED Integration
 Person(admin, "Administrator", "Administrator or System Automated User")
 
 System_Boundary(dit_system, "Department of International Trade"){
-    System(datahub, "datahub", "Datahub System with Job Scheduler")
+    System(datahub, "datahub", "Datahub System with web clients, API's and bespoke solutions for DIT")
 }
 
 System_Boundary(bed_system, "Business Engagement Database"){
