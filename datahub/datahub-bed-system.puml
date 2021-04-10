@@ -1,0 +1,27 @@
+
+@startuml Datahub to BED System Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_AS_SKETCH()
+LAYOUT_WITH_LEGEND()
+LAYOUT_LEFT_RIGHT()
+' LAYOUT_TOP_DOWN()
+
+title System Context diagram for DIT Datahub and BED Integration
+
+Person(admin, "Administrator", "Administrator or System Automated User")
+
+System_Boundary(dit_system, "Department of International Trade"){
+    System(datahub, "datahub", "Datahub System with Job Scheduler")
+}
+
+System_Boundary(bed_system, "Business Engagement Database"){
+    System_Ext(salesforce, "Salesforce CRM", "Salesforce integrated CRM platform")
+}
+
+Rel(admin, datahub, "Syncronises interactions using")
+' Rel(datahub, salesforce, "Uses BED interactions")
+Rel(datahub, salesforce, "Uses")
+' Rel(salesforce, datahub, "Uses Datahub interactions")
+Rel(salesforce, datahub, "Uses")
+@enduml
