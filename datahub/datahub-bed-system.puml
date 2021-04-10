@@ -19,7 +19,7 @@ System_Boundary(bed_system, "Business Engagement Database"){
     System_Ext(salesforce, "Salesforce CRM", "Salesforce integrated CRM platform")
 }
 
-Rel(admin, datahub, "Syncronises interactions using")
+Rel(admin, datahub, "Synchronises interactions using")
 ' Rel(datahub, salesforce, "Uses BED interactions")
 Rel(datahub, salesforce, "Uses")
 ' Rel(salesforce, datahub, "Uses Datahub interactions")
