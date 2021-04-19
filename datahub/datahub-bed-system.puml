@@ -2,7 +2,7 @@
 @startuml Datahub to BED System Diagram
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-LAYOUT_AS_SKETCH()
+' LAYOUT_AS_SKETCH()
 LAYOUT_WITH_LEGEND()
 LAYOUT_LEFT_RIGHT()
 ' LAYOUT_TOP_DOWN()
