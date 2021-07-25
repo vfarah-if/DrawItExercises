@@ -12,7 +12,7 @@ Person(admin, "Administrator", "Administrator")
 Person(sysuser, "System ", "System or Automated User")
 
 Container_Boundary(dit_system, "Department of International Trade"){
-    Container(datahub_api, "Datahub API", "Python Django", "Exposes Datahub API aswell as Command Pattern Structure for Automation")
+    Container(datahub_api, "Datahub API", "Python Django", "Exposes Datahub API as well as Command Pattern Structure for Automation")
     Container(cellery, "Job Schedular", "Python Cellery", "Task oriented cron based job schedular")
     ContainerDb(datahub_db, "datahub db", "Postgres 10", "Durable persistence storage for Datahub")
 }

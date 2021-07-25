@@ -11,9 +11,9 @@
      "browser4" [color=lightgray label="Browser"]
      "browser5" [color=lightgray label="Browser"]
 
-     "app-datahub-api"   [color=black fillcolor=green fontcolor=white label="DataHub API"]
+     "app-datahub-api"   [color=black fillcolor=green fontcolor=black label="DataHub API"]
      "app-datahub-web"   [color=orange label="DataHub Web"]
-     "app-datahub-cellary" [color=black fillcolor=red fontcolor=white label="Datahub Celery"]    
+     "app-datahub-cellary" [color=black fillcolor=red fontcolor=black label="Datahub Celery"]    
      "app-omis"          [color=orange label="OMIS"]
      "app-mi-api-client" [color=lightblue label="MI API Client"]
      "app-dnb-direct"    [color=lightblue label="Dun & Bradstreet Direct"]
