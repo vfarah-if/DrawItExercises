@@ -13,7 +13,7 @@
 
      "app-datahub-api"   [color=black fillcolor=green fontcolor=black label="DataHub API"]
      "app-datahub-web"   [color=orange label="DataHub Web"]
-     "app-datahub-cellary" [color=black fillcolor=red fontcolor=black label="Datahub Celery"]    
+     "app-datahub-celery" [color=black fillcolor=red fontcolor=black label="Datahub Celery"]    
      "app-omis"          [color=orange label="OMIS"]
      "app-mi-api-client" [color=lightblue label="MI API Client"]
      "app-dnb-direct"    [color=lightblue label="Dun & Bradstreet Direct"]
@@ -74,7 +74,7 @@
      "browser5" -> "app-fex"
      "app-ds-api" -> "app-fex"
 
-     "user-system-administrator" -> "app-datahub-cellary"
-     "app-datahub-cellary" -> "app-datahub-api"
+     "user-system-administrator" -> "app-datahub-celery"
+     "app-datahub-celery" -> "app-datahub-api"
      "app-datahub-api" -> "app-bed" 
    }
