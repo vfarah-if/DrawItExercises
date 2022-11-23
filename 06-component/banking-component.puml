@@ -1,7 +1,5 @@
-@startuml Internet Banking System
+@startuml Component diagram for Internet Banking System - API Application
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-' uncomment the following line and comment the first to use locally
-' !include C4_Component.puml
 
 LAYOUT_WITH_LEGEND()
 
@@ -18,8 +16,7 @@ Container_Boundary(api, "API Application") {
     Component(security, "Security Component", "Spring Bean", "Provides functionality related to singing in, changing passwords, etc.")
     Component(mbsfacade, "Mainframe Banking System Facade", "Spring Bean", "A facade onto the mainframe banking system.")
 
-    Rel(sign, security, "Uses")
-    Rel(accounts, mbsfacade, "Uses")
+    Rel(sign, security, "Uses")    Rel(accounts, mbsfacade, "Uses")
     Rel(security, db, "Read & write to", "JDBC")
     Rel(mbsfacade, mbs, "Uses", "XML/HTTPS")
 }

@@ -4,6 +4,7 @@
 HIDE_STEREOTYPE()
 LAYOUT_AS_SKETCH()
 
+
 Person(a, "A")
 Person(b, "B")
 Person(c, "C")
