@@ -1,0 +1,51 @@
+@startuml Fabric System Overview
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+' skinparam wrapWidth 200
+' skinparam maxMessageSize 200
+
+LAYOUT_AS_SKETCH()
+' LAYOUT_WITH_LEGEND()
+LAYOUT_TOP_DOWN()
+
+title Fabric System Context Diagram
+
+Person(customer, "Customer", "A customer")
+
+System_Boundary(fabric, "Fabric Azure Landing Zone"){
+  System(web_app, "Fabric Web Portal", "Web application")
+  System(ios_app, "IOS SDK", "IOS Mobile Application")
+  System(android_app, "Fabric Android Mobile", "Android Mobile Application")
+}
+
+System_Boundary(eip, "EIP Landing Zone"){
+  System(apm, "APM", "Give a better description")
+}
+
+System_Boundary(oms, "OMS"){
+  System(oms_app, "OMS App", "Give a better description")
+}
+
+System_Boundary(thrd_prty, "Third Party Vendors"){
+  System_Ext(telium, "Tealium", "Future Analytics") 
+  System_Ext(adobe, "Adobe Analytics", "Existing Analytics") 
+  System_Ext(contentstack, "ContentStack", "CMS") 
+  System_Ext(commercetools, "CommerceTools", "Commerce Solution")
+  System_Ext(attraqt, "Attract", "Omnichannel AI-powered search, merchandising, and recommendations")
+  System_Ext(slack, "Slack", "Notification Channels") 
+}
+
+System_Boundary(sap, "SAP Commerce on Azure"){
+  System_Ext(sap_hybris, "SAP Hybris", "SAP Current Production New Look System") 
+}
+
+Rel(customer, web_app, "Uses", "HTTPS")
+Rel(customer, ios_app, "Uses")
+Rel(customer, android_app, "Uses")
+Rel(fabric, apm, "Uses", "Azure Service Bus")
+Rel(apm, fabric, "Uses", "Azure Service Bus")
+Rel(fabric, thrd_prty, "Uses API/SDK")
+Rel(fabric, sap, "Uses API")
+Rel(sap, thrd_prty, "Uses API/SDK")
+
+@enduml

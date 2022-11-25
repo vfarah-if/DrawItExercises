@@ -1,0 +1,20 @@
+@startuml Fabric System Overview
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
+
+LAYOUT_AS_SKETCH()
+
+Person(customer, "Customer", "A customer")
+
+System_Boundary(fabric_app, "Fabric Azure Landing Zone"){
+  Container(web_app, "Fabric Web Portal", "Javascript, Typescript, Next, React", "Web application")
+  Container(ios_app, "Fabric IOS Mobile App", "IOS SDK", "IOS Mobile Application")
+  Container(android_app, "Fabric Android Mobile", "Android SDK", "Android Mobile Application")
+}
+Rel(customer, web_app, "Uses", "HTTPS")
+Rel(customer, ios_app, "Uses")
+Rel(customer, android_app, "Uses")
+
+@enduml
