@@ -1,51 +1,81 @@
 @startuml Fabric System Overview
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-' skinparam wrapWidth 200
-' skinparam maxMessageSize 200
+title Fabric System Context Diagram
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
 
 LAYOUT_AS_SKETCH()
 ' LAYOUT_WITH_LEGEND()
-LAYOUT_TOP_DOWN()
+' LAYOUT_TOP_DOWN()
 
-title Fabric System Context Diagram
+UpdateSkinparamsAndLegendEntry("external_system", $bgColor=Red, $fontColor=White, $borderColor=Black)
 
 Person(customer, "Customer", "A customer")
 
-System_Boundary(fabric, "Fabric Azure Landing Zone"){
+' Systems
+System_Boundary(fabric, "Fabric Azure"){
   System(web_app, "Fabric Web Portal", "Web application")
   System(ios_app, "IOS SDK", "IOS Mobile Application")
   System(android_app, "Fabric Android Mobile", "Android Mobile Application")
 }
 
-System_Boundary(eip, "EIP Landing Zone"){
-  System(apm, "APM", "Give a better description")
+System_Boundary(eip, "Enterprise Integration Platform"){
+  System(azure_api_management, "Azure API Management", "API and Serverless")
 }
 
-System_Boundary(oms, "OMS"){
-  System(oms_app, "OMS App", "Give a better description")
+System_Boundary(oms, "Order Management System"){
+  System(oms_app, "OMS App", "Order Management System")
 }
 
 System_Boundary(thrd_prty, "Third Party Vendors"){
+  System_Ext(akamai, "Akamai", "Content Delivery Network Provider")
   System_Ext(telium, "Tealium", "Future Analytics") 
   System_Ext(adobe, "Adobe Analytics", "Existing Analytics") 
+  
   System_Ext(contentstack, "ContentStack", "CMS") 
+  System_Ext(selektron, "Selecktron", "Inventory Feed") 
+  System_Ext(kronos, "Kronos", "Kronos") 
+  System_Ext(im3, "Mnetics", "???") 
+  
   System_Ext(commercetools, "CommerceTools", "Commerce Solution")
-  System_Ext(attraqt, "Attract", "Omnichannel AI-powered search, merchandising, and recommendations")
-  System_Ext(slack, "Slack", "Notification Channels") 
+  System_Ext(promotions_tbc, "Promotions TBC", "???")
+  
+  System_Ext(attraqt, "Attraqt", "Omnichannel AI-powered search")
+  System_Ext(tbc, "Store 6 TBC", "???")
+  System_Ext(zendesk, "Zendesk", "Service-first CRM")
+  System_Ext(resa, "ReSA", "???")
+
+  System_Ext(slack, "Slack", "Notification Channels")   
+
+  System_Boundary(checkout, "Checkout"){
+    System_Ext(pps, "Prepaid Solutions PPS", "Checkout")
+    System_Ext(qas, "QAS Experian", "Checkout")
+    System_Ext(klarna, "Klarna", "Checkout")
+    System_Ext(ikano, "Ikano", "Checkout")
+    System_Ext(metapack, "Metapack", "Checkout")
+    System_Ext(emarsys, "Emarsys", "Checkout")
+    System_Ext(selektron, "Selektron ATC", "Checkout")
+    System_Ext(cybersource, "CyberSource", "Checkout")
+    System_Ext(paypal, "Paypal", "Checkout")
+  }
 }
 
 System_Boundary(sap, "SAP Commerce on Azure"){
   System_Ext(sap_hybris, "SAP Hybris", "SAP Current Production New Look System") 
+  System_Ext(gigia, "SAP Gigia", "Identity Management in SAP") 
 }
 
+' System Relationships
 Rel(customer, web_app, "Uses", "HTTPS")
 Rel(customer, ios_app, "Uses")
 Rel(customer, android_app, "Uses")
-Rel(fabric, apm, "Uses", "Azure Service Bus")
-Rel(apm, fabric, "Uses", "Azure Service Bus")
-Rel(fabric, thrd_prty, "Uses API/SDK")
-Rel(fabric, sap, "Uses API")
-Rel(sap, thrd_prty, "Uses API/SDK")
+Rel(fabric, eip, "Uses", "Azure Service Bus/APIM")
+Rel(fabric, sap, "Uses", "API")
+Rel(eip, oms, "Uses", "Uses Azure Service Bus")
+Rel(fabric, thrd_prty, "Uses", "API/SDK")
+Rel(sap, cybersource, "Uses", "API/SDK")
+
+SHOW_DYNAMIC_LEGEND()
 
 @enduml
