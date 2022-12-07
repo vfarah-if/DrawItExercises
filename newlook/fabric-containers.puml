@@ -42,7 +42,11 @@ Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
   Container(service_product, "Rest API", "Javascript, Typescript, Nest.js", "Product Domain Service", "nestjs_wordmark")  
   Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
   Container(service_search, "Rest API", "Javascript, Typescript, Nest.js", "Search Domain Service", "nestjs_wordmark")  
+  Container(service_order, "Rest API", "Javascript, Typescript, Nest.js", "Order Domain Service", "nestjs_wordmark")  
 }
+
+' Container_Boundary(eip, "Enterprise Integration Platform"){
+' }
 
 Container_Boundary(mobile_device, "Mobile Device") {
   Container(ios_app, "Fabric IOS Mobile App", "Swift", "IOS Mobile Application", "swift")
@@ -53,7 +57,8 @@ Container_Boundary(mobile_device, "Mobile Device") {
 System_Ext(contentstack, "Contentstack", "Headless CMS")
 System_Ext(commerce_tools, "Commercetools", "Headless Commerce")
 System_Ext(sap_cdc, "SAP CDC", "SAP Customer Data Cloud")
-System_Ext(attraqt, "Attraqt", "eCommerce Solutions and Search")
+System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search")
+System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C")
 
 ' People
 Rel(customer, web_app, "Uses", "HTTPS")
@@ -71,6 +76,7 @@ Rel(bff, service_cart, "Uses", "HTTP")
 Rel(bff, service_product, "Uses", "HTTP")
 Rel(bff, service_customer, "Uses", "HTTP")
 Rel(bff, service_search, "Uses", "HTTP")
+Rel(bff, service_order, "Uses", "HTTP")
 
 ' Commerce Tools
 Rel(service_cart, commerce_tools, "Uses", "HTTP, Headless")
@@ -84,6 +90,9 @@ Rel(service_customer, sap_cdc, "Uses", "HTTP")
 
 ' Attraqt
 Rel(service_search, attraqt, "Uses", "HTTP")
+
+' SAP Hybris
+Rel(service_order, sap_hybris, "Uses", "Azure message bus")
 
 SHOW_DYNAMIC_LEGEND()
 
