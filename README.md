@@ -26,7 +26,6 @@ C4-PlantUML combines the benefits of [PlantUML](https://plantuml.com/) and the [
 
 - **Note** there are other ways with installing GraphViz and other previewers but this was the simplest for me to get going
 
-  
+- Find icons to pimp up your diagram with [plant uml icons](https://github.com/tupadr3/plantuml-icon-font-sprites) 
 
-
-
+- Add specific [azure plantuml](https://github.com/plantuml-stdlib/Azure-PlantUML) and add [azure plantuml snippets](https://github.com/plantuml-stdlib/Azure-PlantUML/blob/master/dist/.vscode/snippets/diagram.json) to help the coding experience
