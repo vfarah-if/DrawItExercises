@@ -27,8 +27,8 @@ LAYOUT_AS_SKETCH()
 UpdateSkinparamsAndLegendEntry("external_system", $bgColor=Red, $fontColor=White, $borderColor=Black)
 
 Person(customer, "Customer", "A customer", users)
-LAYOUT_LEFT_RIGHT()
-' LAYOUT_TOP_DOWN()
+' LAYOUT_LEFT_RIGHT()
+LAYOUT_TOP_DOWN()
 
 
 ' Containers
