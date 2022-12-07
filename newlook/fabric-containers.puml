@@ -1,20 +1,90 @@
 @startuml Fabric System Overview
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
 
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!define AzurePuml https://raw.githubusercontent.com/plantuml-stdlib/Azure-PlantUML/release/2-1/dist
+
+!includeurl AzurePuml/AzureCommon.puml
+
+!include DEVICONS/java.puml
+!include DEVICONS/javascript_badge.puml
+!include DEVICONS/npm.puml
+!include DEVICONS/react.puml
+!include DEVICONS/swift.puml
+
+!include DEVICONS2/nextjs_original_wordmark.puml
+!include DEVICONS2/yarn_wordmark.puml
+!include DEVICONS2/typescript.puml
+!include DEVICONS2/nestjs_wordmark.puml
+
+!include FONTAWESOME/users.puml
+
 skinparam wrapWidth 200
-skinparam maxMessageSize 200
 
 LAYOUT_AS_SKETCH()
+UpdateSkinparamsAndLegendEntry("external_system", $bgColor=Red, $fontColor=White, $borderColor=Black)
 
-Person(customer, "Customer", "A customer")
+Person(customer, "Customer", "A customer", users)
+LAYOUT_LEFT_RIGHT()
+' LAYOUT_TOP_DOWN()
 
-System_Boundary(fabric_app, "Fabric Azure Landing Zone"){
-  Container(web_app, "Fabric Web Portal", "Javascript, Typescript, Next, React", "Web application")
-  Container(ios_app, "Fabric IOS Mobile App", "IOS SDK", "IOS Mobile Application")
-  Container(android_app, "Fabric Android Mobile", "Android SDK", "Android Mobile Application")
+
+' Containers
+Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
+  Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
+  
+  Container(bff, "BFF", "Javascript, Typescript, Nest.js", "Backend for frontend", "javascript_badge")
+
+  Container(service_content, "Rest API", "Javascript, Typescript, Nest.js", "Content Domain Service", "nestjs_wordmark")
+  Container(service_cart, "Rest API", "Javascript, Typescript, Nest.js", "Cart Domain Service", "nestjs_wordmark")
+  Container(service_product, "Rest API", "Javascript, Typescript, Nest.js", "Product Domain Service", "nestjs_wordmark")  
+  Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
+  Container(service_search, "Rest API", "Javascript, Typescript, Nest.js", "Search Domain Service", "nestjs_wordmark")  
 }
+
+Container_Boundary(mobile_device, "Mobile Device") {
+  Container(ios_app, "Fabric IOS Mobile App", "Swift", "IOS Mobile Application", "swift")
+  Container(android_app, "Fabric Android Mobile", "Java", "Android Mobile Application", "java")  
+}
+
+' External Systems
+System_Ext(contentstack, "Contentstack", "Headless CMS")
+System_Ext(commerce_tools, "Commercetools", "Headless Commerce")
+System_Ext(sap_cdc, "SAP CDC", "SAP Customer Data Cloud")
+System_Ext(attraqt, "Attraqt", "eCommerce Solutions and Search")
+
+' People
 Rel(customer, web_app, "Uses", "HTTPS")
 Rel(customer, ios_app, "Uses")
 Rel(customer, android_app, "Uses")
+
+' BFF
+Rel(web_app, bff, "Uses", "GraphQL, GQL, HTTP")
+Rel(ios_app, bff, "Uses", "GraphQL, GQL, HTTP")
+Rel(android_app, bff, "Uses", "GraphQL, GQL, HTTP")
+
+' API's
+Rel(bff, service_content, "Uses", "HTTP")
+Rel(bff, service_cart, "Uses", "HTTP")
+Rel(bff, service_product, "Uses", "HTTP")
+Rel(bff, service_customer, "Uses", "HTTP")
+Rel(bff, service_search, "Uses", "HTTP")
+
+' Commerce Tools
+Rel(service_cart, commerce_tools, "Uses", "HTTP, Headless")
+Rel(service_product, commerce_tools, "Uses", "HTTP, Headless")
+
+' Contentstack
+Rel(service_content, contentstack, "Uses", "HTTP, Headless")
+
+' SAP CDC
+Rel(service_customer, sap_cdc, "Uses", "HTTP")
+
+' Attraqt
+Rel(service_search, attraqt, "Uses", "HTTP")
+
+SHOW_DYNAMIC_LEGEND()
 
 @enduml
