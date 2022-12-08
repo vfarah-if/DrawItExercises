@@ -38,6 +38,7 @@ Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
   Container(bff, "BFF", "Javascript, Typescript, Nest.js", "Backend for frontend", "javascript_badge")
 
   Container(service_content, "Rest API", "Javascript, Typescript, Nest.js", "Content Domain Service", "nestjs_wordmark")
+  Container(service_cms_configuration, "Rest API", "Javascript, Typescript, Nest.js", "CMS Configuration Service", "nestjs_wordmark")
   Container(service_cart, "Rest API", "Javascript, Typescript, Nest.js", "Cart Domain Service", "nestjs_wordmark")
   Container(service_product, "Rest API", "Javascript, Typescript, Nest.js", "Product Domain Service", "nestjs_wordmark")  
   Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
@@ -72,6 +73,7 @@ Rel(android_app, bff, "Uses", "GraphQL, GQL, HTTP")
 
 ' API's
 Rel(bff, service_content, "Uses", "HTTP")
+Rel(bff, service_cms_configuration, "Uses", "HTTP")
 Rel(bff, service_cart, "Uses", "HTTP")
 Rel(bff, service_product, "Uses", "HTTP")
 Rel(bff, service_customer, "Uses", "HTTP")
@@ -84,6 +86,7 @@ Rel(service_product, commerce_tools, "Uses", "HTTP, Headless")
 
 ' Contentstack
 Rel(service_content, contentstack, "Uses", "HTTP, Headless")
+Rel(service_cms_configuration, contentstack, "Configures", "HTTP, Headless")
 
 ' SAP CDC
 Rel(service_customer, sap_cdc, "Uses", "HTTP")
