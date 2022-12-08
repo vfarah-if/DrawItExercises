@@ -70,11 +70,11 @@ System_Boundary(sap, "SAP Commerce on Azure"){
 Rel(customer, web_app, "Uses", "HTTPS")
 Rel(customer, ios_app, "Uses")
 Rel(customer, android_app, "Uses")
-Rel(fabric, eip, "Uses", "Azure Service Bus/APIM")
-Rel(fabric, sap, "Uses", "API")
-Rel(eip, oms, "Uses", "Uses Azure Service Bus")
-Rel(fabric, thrd_prty, "Uses", "API/SDK")
-Rel(sap, cybersource, "Uses", "API/SDK")
+Rel(fabric, eip, "Uses")
+Rel(fabric, sap, "Uses")
+Rel(eip, oms, "Uses")
+Rel(fabric, thrd_prty, "Uses")
+Rel(sap, cybersource, "Uses")
 
 SHOW_DYNAMIC_LEGEND()
 
