@@ -7,6 +7,7 @@
 !define AzurePuml https://raw.githubusercontent.com/plantuml-stdlib/Azure-PlantUML/release/2-1/dist
 
 !includeurl AzurePuml/AzureCommon.puml
+!includeurl AzurePuml/Web/AzureCDN.puml
 
 !include DEVICONS/java.puml
 !include DEVICONS/javascript_badge.puml
@@ -33,6 +34,8 @@ LAYOUT_TOP_DOWN()
 
 ' Containers
 Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
+  AzureCDN(cdn, "CDN", "Akamai S2", "Caches publicly available content for speed")  
+
   Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
   
   Container(bff, "BFF", "Javascript, Typescript, Nest.js", "Backend for frontend", "javascript_badge")
@@ -62,7 +65,8 @@ System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search")
 System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C")
 
 ' People
-Rel(customer, web_app, "Uses", "HTTPS")
+Rel(customer, cdn, "Caches", "HTTPS")
+Rel(cdn, web_app, "Routes to", "HTTPS")
 Rel(customer, ios_app, "Uses")
 Rel(customer, android_app, "Uses")
 
