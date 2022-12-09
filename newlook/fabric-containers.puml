@@ -68,8 +68,9 @@ System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
 
 ' People
 ' NOTE The CDN is incorrectly mapped, added for example sake
-Rel(customer, cdn, "uses app or browser", "HTTPS, Native")
-' Rel(cdn, web_app, "Routes to", "HTTPS")
+Rel(customer, cdn, "uses browser", "HTTPS, Native")
+Rel(customer, ios_app, "uses app", "Native")
+Rel(customer, android_app, "uses app", "Native")
 Rel_Back(cdn, ios_app, "Caches and routes")
 Rel_Back(cdn, android_app, "Caches and routes")
 Rel(cdn, web_app, "Caches and routes")
