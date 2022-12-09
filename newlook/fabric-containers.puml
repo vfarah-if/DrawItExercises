@@ -21,6 +21,7 @@
 !include DEVICONS2/nestjs_wordmark.puml
 
 !include FONTAWESOME/users.puml
+!include FONTAWESOME/cubes.puml
 
 skinparam wrapWidth 200
 
@@ -58,17 +59,19 @@ Container_Boundary(mobile_device, "Mobile Device") {
 }
 
 ' External Systems
-System_Ext(contentstack, "Contentstack", "Headless CMS")
-System_Ext(commerce_tools, "Commercetools", "Headless Commerce")
-System_Ext(sap_cdc, "SAP CDC", "SAP Customer Data Cloud")
-System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search")
-System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C")
+System_Ext(contentstack, "Contentstack", "Headless CMS", "cubes")
+System_Ext(commerce_tools, "Commercetools", "Headless Commerce", "cubes")
+System_Ext(sap_cdc, "SAP CDC", "SAP Customer Data Cloud", "cubes")
+System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")
+System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
 
 ' People
 Rel(customer, cdn, "Caches", "HTTPS")
 Rel(cdn, web_app, "Routes to", "HTTPS")
 Rel(customer, ios_app, "Uses")
 Rel(customer, android_app, "Uses")
+' Rel(ios_app, cdn, "Caches")
+' Rel(android_app, cdn, "Caches")
 
 ' BFF
 Rel(web_app, bff, "Uses", "GraphQL, GQL, HTTP")
