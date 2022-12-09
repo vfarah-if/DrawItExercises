@@ -33,10 +33,11 @@ Person(customer, "Customer", "A customer", users)
 LAYOUT_TOP_DOWN()
 
 
+AzureCDN(cdn, "CDN", "Akamai", "Caches publicly available content for speed")  
+
 ' Containers
 Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
-  AzureCDN(cdn, "CDN", "Akamai S2", "Caches publicly available content for speed")  
-
+  
   Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
   
   Container(bff, "BFF", "Javascript, Typescript, Nest.js", "Backend for frontend", "javascript_badge")
@@ -66,10 +67,12 @@ System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")
 System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
 
 ' People
-Rel(customer, cdn, "Caches", "HTTPS")
-Rel(cdn, web_app, "Routes to", "HTTPS")
-Rel(customer, ios_app, "Uses")
-Rel(customer, android_app, "Uses")
+' NOTE The CDN is incorrectly mapped, added for example sake
+Rel(customer, cdn, "uses app or browser", "HTTPS, Native")
+' Rel(cdn, web_app, "Routes to", "HTTPS")
+Rel(cdn, ios_app, "Caches and routes")
+Rel(cdn, android_app, "Caches and routes")
+Rel(cdn, web_app, "Caches and routes")
 ' Rel(ios_app, cdn, "Caches")
 ' Rel(android_app, cdn, "Caches")
 
