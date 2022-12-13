@@ -1,0 +1,184 @@
+@startuml newlook_storefront_sequence_diagram
+hide footbox
+'autonumber "<font color=gray>[0]"
+
+actor Customer
+participant Browser
+participant "Edge CDN" as CDN
+participant "NextJS Storefront" as NextJS
+participant "GraphQL" as GraphQL
+participant "API Gateway" as API
+participant "SAP Commerce" as SAPCommerce
+
+
+
+== Visit Site Homepage (Bot) ==
+
+' Customer visits Site Homepage
+note over Browser : First request to the site
+Customer -[#blue]> Browser : Visit newlook.com
+
+activate Browser
+
+Browser -> CDN : GET newlook.com
+activate CDN
+Browser <-- CDN : Redirect to site homepage\nnewlook.com/uk
+deactivate CDN
+
+' Initial Request for Site Homepage
+Browser -> CDN : GET newlook.com/uk
+activate CDN
+note right #lightblue : check CDN cache
+CDN -> NextJS : Request Site Homepage
+activate NextJS
+
+' NextJS Requests data for SSR
+NextJS -> GraphQL : Request Page Data
+activate GraphQL
+
+GraphQL -> API : Request CMS Data
+activate API
+note right #lightblue : check API cache
+API -> SAPCommerce : Request CMS Data
+activate SAPCommerce
+API <-- SAPCommerce : CMS Data Response
+deactivate SAPCommerce
+GraphQL <-- API : CMS Data Response
+deactivate API
+
+NextJS <-- GraphQL : Page Data Response
+deactivate GraphQL
+
+
+CDN <-- NextJS : SSR Page Response
+deactivate NextJS
+Browser <-- CDN : SSR Page Response
+deactivate CDN
+
+deactivate Browser
+
+
+== Visit Site Homepage (User) ==
+
+' Customer visits Site Homepage
+note over Browser : First request to the site
+Customer -[#blue]> Browser : Visit newlook.com
+
+activate Browser
+
+Browser -> CDN : GET newlook.com
+activate CDN
+Browser <-- CDN : Redirect to site homepage\nnewlook.com/uk
+deactivate CDN
+
+' Initial Request for Site Homepage
+Browser -> CDN : GET newlook.com/uk
+activate CDN
+note right #lightblue : check CDN cache
+CDN -> NextJS : Request Site Homepage
+activate NextJS
+
+' NextJS Requests data for SSR
+NextJS -> GraphQL : Request Page Data
+activate GraphQL
+
+GraphQL -> API : Request CMS Data
+activate API
+note right #lightblue : check API cache
+API -> SAPCommerce : Request CMS Data
+activate SAPCommerce
+API <-- SAPCommerce : CMS Data Response
+deactivate SAPCommerce
+GraphQL <-- API : CMS Data Response
+deactivate API
+
+NextJS <-- GraphQL : Page Data Response
+deactivate GraphQL
+
+
+CDN <-- NextJS : SSR Page Response
+deactivate NextJS
+Browser <-- CDN : SSR Page Response
+deactivate CDN
+
+' Request Cart Data
+Browser -> CDN : XHR GET Visitor's Cart Data\nSends authentication cookie or token
+activate CDN
+CDN -> API : GET Cart Data
+activate API
+API -> SAPCommerce : GET Cart
+activate SAPCommerce
+API <-- SAPCommerce : Cart Response
+deactivate SAPCommerce
+CDN <-- API : Cart Response
+deactivate API
+
+Browser <-- CDN : Page Data Response
+deactivate CDN
+
+deactivate Browser
+
+== Visit Product Details Page ==
+
+' Customer visits Product details Page
+note over Browser : Visit PDP without page load
+Customer -[#blue]> Browser : Visit Product Details Page
+
+activate Browser
+
+' Request CMS content and Product Data
+Browser -> CDN : XHR Request PDP Data
+activate CDN
+CDN -> GraphQL : Request PDP Data
+activate GraphQL
+
+GraphQL -> API : Request CMS Data
+activate API
+note right #lightblue : check API cache
+API -> SAPCommerce : Request CMS Data
+activate SAPCommerce
+API <-- SAPCommerce : CMS Data Response
+deactivate SAPCommerce
+GraphQL <-- API : CMS Data Response
+deactivate API
+
+GraphQL -> API : Request Product Data
+activate API
+note right #lightblue : check API cache
+API -> SAPCommerce : Request Product Data
+activate SAPCommerce
+API <-- SAPCommerce : Product Data Response
+deactivate SAPCommerce
+GraphQL <-- API : Product Data Response
+deactivate API
+
+CDN <-- GraphQL : PDP Data Response
+deactivate GraphQL
+Browser <-- CDN : PDP Data Response
+deactivate CDN
+
+deactivate Browser
+
+== Add Product to Cart (API Only) ==
+
+' Customer clicks on Add To Cart
+note over Browser : Add to cart from the PDP
+Customer -[#blue]> Browser : Click Add To Cart
+
+activate Browser
+
+Browser -> CDN : POST Add to Cart API
+activate CDN
+CDN -> API : Add to Cart API
+activate API
+API -> SAPCommerce : Add to Cart API
+activate SAPCommerce
+API <-- SAPCommerce : Add to Cart Response
+deactivate SAPCommerce
+CDN <-- API : Add to Cart Response
+deactivate API
+Browser <-- CDN : Add to Cart Response
+deactivate CDN
+
+deactivate Browser
+@enduml
