@@ -1,0 +1,80 @@
+ digraph "System Architecture and Data Flow Diagram" {
+     node [shape=box style=filled];
+     "user-public" [shape=oval style=line label="Public User"]
+     "user-dit"    [shape=oval style=line label="DIT User"]
+     "user-beta"   [shape=oval style=line label="DIT Beta User"]
+     "user-system-administrator" [shape=oval style=line label="DIT/BED System administrator"]
+
+     "browser1" [color=lightgray label="Browser"]
+     "browser2" [color=lightgray label="Browser"]
+     "browser3" [color=lightgray label="Browser"]
+     "browser4" [color=lightgray label="Browser"]
+     "browser5" [color=lightgray label="Browser"]
+
+     "app-datahub-api"   [color=black fillcolor=green fontcolor=black label="DataHub API"]
+     "app-datahub-web"   [color=orange label="DataHub Web"]
+     "app-datahub-celery" [color=black fillcolor=red fontcolor=black label="Datahub Celery"]    
+     "app-omis"          [color=orange label="OMIS"]
+     "app-mi-api-client" [color=lightblue label="MI API Client"]
+     "app-dnb-direct"    [color=lightblue label="Dun & Bradstreet Direct"]
+     "app-staff-sso"     [color=lightyellow label="Staff SSO"]
+     "app-mobile-office" [color=lightblue label="Mobile Office IDP"]
+     "app-cirrus"        [color=lightblue label="Cirrus IDP"]
+     "app-email-auth"    [color=lightblue label="Email Authentication"]
+     "app-documents"     [color=lightblue label="Document Browser"]
+     "app-ma-web"        [color=orange label="Market Access Web"]
+     "app-ma-api"        [color=lightblue label="Market Access API"]
+     "app-fex"           [color=orange label="Find Exporters"]
+     "app-ds-api"        [color=lightblue label="Data Science API"]
+     "app-bed"           [color=lightblue label="BED on Salesforce"]
+     
+
+     "db-redis1"   [color=lightcoral label="Redis"]
+     "db-redis2"   [color=lightcoral label="Redis"]
+     "db-postgres" [color=lightcoral label="Postgres"]
+     "db-elastic"  [color=lightcoral label="ElasticSearch"]
+     "db-s3"       [color=lightcoral label="S3 Document Store"]
+     "db-ma"       [color=lightcoral label="Market Access Database"]
+
+     "user-public" -> "browser1"
+     "browser1" -> "app-omis"
+     "app-omis" -> "app-datahub-api" [dir=back]
+     "app-mi-api-client" -> "app-datahub-api"
+     "app-dnb-direct" -> "app-datahub-api"
+     "app-ma-api" -> "app-datahub-api"
+     "app-ds-api" -> "app-datahub-api" [dir=back]
+    
+
+     "user-dit" -> "browser2"
+     "browser2" -> "app-datahub-web"
+     "browser2" -> "app-staff-sso"
+     "app-datahub-web" -> "app-datahub-api" [dir=back]
+
+     "app-datahub-web" -> "db-redis1"
+     "app-datahub-api" -> "db-postgres"
+     "app-ds-api" -> "db-postgres"
+     "app-datahub-api" -> "db-elastic"
+
+     "app-documents" -> "db-s3"
+     "browser3" -> "app-documents"
+     "browser3" -> "app-staff-sso"
+     "app-staff-sso" -> "app-email-auth" [dir=back]
+     "app-staff-sso" -> "app-cirrus" [dir=back]
+     "app-staff-sso" -> "app-mobile-office" [dir=back]
+
+     "user-beta" -> "browser4"
+     "browser4" -> "app-staff-sso"
+     "browser4" -> "app-ma-web"
+     "app-ma-web" -> "db-redis2"
+     "app-ma-api" -> "app-ma-web"
+     "app-ma-api" -> "db-ma"
+
+     "user-beta" -> "browser5"
+     "browser5" -> "app-staff-sso"
+     "browser5" -> "app-fex"
+     "app-ds-api" -> "app-fex"
+
+     "user-system-administrator" -> "app-datahub-celery"
+     "app-datahub-celery" -> "app-datahub-api"
+     "app-datahub-api" -> "app-bed" 
+   }
