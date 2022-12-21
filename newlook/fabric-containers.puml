@@ -41,7 +41,7 @@ Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
   Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
   
   Container(bff, "BFF", "Javascript, Typescript, Apollo, GraphQL", "Backend for frontend", "javascript_badge")
-
+  
   Container(service_content, "Rest API", "Javascript, Typescript, Nest.js", "Content Domain Service", "nestjs_wordmark")
   Container(service_cms_configuration, "Rest API", "Javascript, Typescript, Nest.js", "CMS Configuration Service", "nestjs_wordmark")
   Container(service_cart, "Rest API", "Javascript, Typescript, Nest.js", "Cart Domain Service", "nestjs_wordmark")
@@ -57,6 +57,9 @@ Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
 Container_Boundary(mobile_device, "Mobile Device") {
   Container(ios_app, "Fabric IOS Mobile App", "Swift", "IOS Mobile Application", "swift")
   Container(android_app, "Fabric Android Mobile", "Java", "Android Mobile Application", "java")  
+  
+  Container(ios_bff, "IOS BFF", "Swift", "Backend for frontend", "swift")
+  Container(android_bff, "Andriod BFF", "Swift", "Backend for frontend", "java")
 }
 
 ' External Systems
@@ -79,10 +82,26 @@ Rel(cdn, web_app, "Caches and routes")
 
 ' BFF
 Rel(web_app, bff, "Uses", "GraphQL, GQL, HTTP")
-Rel(ios_app, bff, "Uses", "GraphQL, GQL, HTTP")
-Rel(android_app, bff, "Uses", "GraphQL, GQL, HTTP")
+Rel(ios_app, ios_bff, "Uses", "GraphQL, GQL, HTTP")
+Rel(android_app, android_bff, "Uses", "GraphQL, GQL, HTTP")
 
 ' API's
+Rel(ios_bff, service_content, "Uses", "HTTP")
+Rel(ios_bff, service_cms_configuration, "Uses", "HTTP")
+Rel(ios_bff, service_cart, "Uses", "HTTP")
+Rel(ios_bff, service_product, "Uses", "HTTP")
+Rel(ios_bff, service_customer, "Uses", "HTTP")
+Rel(ios_bff, service_search, "Uses", "HTTP")
+Rel(ios_bff, service_order, "Uses", "HTTP")
+
+Rel(android_bff, service_content, "Uses", "HTTP")
+Rel(android_bff, service_cms_configuration, "Uses", "HTTP")
+Rel(android_bff, service_cart, "Uses", "HTTP")
+Rel(android_bff, service_product, "Uses", "HTTP")
+Rel(android_bff, service_customer, "Uses", "HTTP")
+Rel(android_bff, service_search, "Uses", "HTTP")
+Rel(android_bff, service_order, "Uses", "HTTP")
+
 Rel(bff, service_content, "Uses", "HTTP")
 Rel(bff, service_cms_configuration, "Uses", "HTTP")
 Rel(bff, service_cart, "Uses", "HTTP")
