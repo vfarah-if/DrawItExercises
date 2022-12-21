@@ -56,10 +56,7 @@ Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
 
 Container_Boundary(mobile_device, "Mobile Device") {
   Container(ios_app, "Fabric IOS Mobile App", "Swift", "IOS Mobile Application", "swift")
-  Container(android_app, "Fabric Android Mobile", "Java", "Android Mobile Application", "java")  
-  
-  Container(ios_bff, "IOS BFF", "Swift", "Backend for frontend", "swift")
-  Container(android_bff, "Andriod BFF", "Swift", "Backend for frontend", "java")
+  Container(android_app, "Fabric Android Mobile", "Java", "Android Mobile Application", "java")    
 }
 
 ' External Systems
@@ -68,6 +65,8 @@ System_Ext(commerce_tools, "Commercetools", "Headless Commerce", "cubes")
 System_Ext(sap_cdc, "SAP CDC", "SAP Customer Data Cloud", "cubes")
 System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")
 System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
+System_Ext(worldpay, "Worldpay", "EFT to wire money via SWIFT", "cubes")
+System_Ext(ikano, "Staff discounts", "Ikano Rewards for discounts", "cubes")
 
 ' People
 ' NOTE The CDN is incorrectly mapped, added for example sake
@@ -80,27 +79,31 @@ Rel(cdn, web_app, "Caches and routes")
 ' Rel(ios_app, cdn, "Caches")
 ' Rel(android_app, cdn, "Caches")
 
+' Other vendors
+Rel(web_app, worldpay, "Make payments via", "API, Http")
+Rel(web_app, ikano, "Get staff discounts via", "API, Http")
+
 ' BFF
 Rel(web_app, bff, "Uses", "GraphQL, GQL, HTTP")
-Rel(ios_app, ios_bff, "Uses", "GraphQL, GQL, HTTP")
-Rel(android_app, android_bff, "Uses", "GraphQL, GQL, HTTP")
+' Rel(ios_app, ios_bff, "Uses", "GraphQL, GQL, HTTP")
+' Rel(android_app, android_bff, "Uses", "GraphQL, GQL, HTTP")
 
 ' API's
-Rel(ios_bff, service_content, "Uses", "HTTP")
-Rel(ios_bff, service_cms_configuration, "Uses", "HTTP")
-Rel(ios_bff, service_cart, "Uses", "HTTP")
-Rel(ios_bff, service_product, "Uses", "HTTP")
-Rel(ios_bff, service_customer, "Uses", "HTTP")
-Rel(ios_bff, service_search, "Uses", "HTTP")
-Rel(ios_bff, service_order, "Uses", "HTTP")
+Rel(ios_app, service_content, "Uses", "HTTP")
+Rel(ios_app, service_cms_configuration, "Uses", "HTTP")
+Rel(ios_app, service_cart, "Uses", "HTTP")
+Rel(ios_app, service_product, "Uses", "HTTP")
+Rel(ios_app, service_customer, "Uses", "HTTP")
+Rel(ios_app, service_search, "Uses", "HTTP")
+Rel(ios_app, service_order, "Uses", "HTTP")
 
-Rel(android_bff, service_content, "Uses", "HTTP")
-Rel(android_bff, service_cms_configuration, "Uses", "HTTP")
-Rel(android_bff, service_cart, "Uses", "HTTP")
-Rel(android_bff, service_product, "Uses", "HTTP")
-Rel(android_bff, service_customer, "Uses", "HTTP")
-Rel(android_bff, service_search, "Uses", "HTTP")
-Rel(android_bff, service_order, "Uses", "HTTP")
+Rel(android_app, service_content, "Uses", "HTTP")
+Rel(android_app, service_cms_configuration, "Uses", "HTTP")
+Rel(android_app, service_cart, "Uses", "HTTP")
+Rel(android_app, service_product, "Uses", "HTTP")
+Rel(android_app, service_customer, "Uses", "HTTP")
+Rel(android_app, service_search, "Uses", "HTTP")
+Rel(android_app, service_order, "Uses", "HTTP")
 
 Rel(bff, service_content, "Uses", "HTTP")
 Rel(bff, service_cms_configuration, "Uses", "HTTP")
