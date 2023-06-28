@@ -1,5 +1,5 @@
 @startuml Fabric System Overview
-!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
 !define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
@@ -62,31 +62,27 @@ Container_Boundary(mobile_device, "Mobile Device") {
 ' External Systems
 System_Ext(contentstack, "Contentstack", "Headless CMS", "cubes")
 System_Ext(commerce_tools, "Commercetools", "Headless Commerce", "cubes")
-System_Ext(sap_cdc, "SAP CDC", "SAP Customer Data Cloud", "cubes")
+System_Ext(sap_cdc, "SAP CIAM", "SAP customer and identity access management", "cubes")
 System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")
 System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
-System_Ext(worldpay, "Worldpay", "EFT to wire money via SWIFT", "cubes")
-System_Ext(ikano, "Staff discounts", "Ikano Rewards for discounts", "cubes")
+' System_Ext(worldpay, "Worldpay", "EFT to wire money via SWIFT", "cubes")
+' System_Ext(ikano, "Staff discounts", "Ikano Rewards for discounts", "cubes")
 
 ' People
-' NOTE The CDN is incorrectly mapped, added for example sake
+' NOTE The CDN is incorrectly mapped, added for example sake 
 Rel(customer, cdn, "uses browser", "HTTPS, Native")
 Rel(customer, ios_app, "uses app", "Native")
 Rel(customer, android_app, "uses app", "Native")
 Rel_Back(cdn, ios_app, "Caches and routes")
 Rel_Back(cdn, android_app, "Caches and routes")
 Rel(cdn, web_app, "Caches and routes")
-' Rel(ios_app, cdn, "Caches")
-' Rel(android_app, cdn, "Caches")
 
 ' Other vendors
-Rel(web_app, worldpay, "Make payments via", "API, Http")
-Rel(web_app, ikano, "Get staff discounts via", "API, Http")
+' Rel(web_app, worldpay, "Make payments via", "API, Http")
+' Rel(web_app, ikano, "Get staff discounts via", "API, Http")
 
 ' BFF
 Rel(web_app, bff, "Uses", "GraphQL, GQL, HTTP")
-' Rel(ios_app, ios_bff, "Uses", "GraphQL, GQL, HTTP")
-' Rel(android_app, android_bff, "Uses", "GraphQL, GQL, HTTP")
 
 ' API's
 Rel(ios_app, service_content, "Uses", "HTTP")
@@ -129,6 +125,7 @@ Rel(service_search, attraqt, "Uses", "HTTP")
 
 ' SAP Hybris
 Rel(service_order, sap_hybris, "Uses", "Azure message bus")
+Rel(bff, sap_hybris, "Uses", "who-am-i endpoint")
 
 SHOW_DYNAMIC_LEGEND()
 
