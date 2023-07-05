@@ -25,7 +25,7 @@
 
 skinparam wrapWidth 200
 
-LAYOUT_AS_SKETCH()
+' LAYOUT_AS_SKETCH()
 UpdateSkinparamsAndLegendEntry("external_system", $bgColor=Red, $fontColor=White, $borderColor=Black)
 
 Person(customer, "Customer", "A customer", users)
@@ -36,8 +36,7 @@ LAYOUT_TOP_DOWN()
 AzureCDN(cdn, "CDN", "Akamai", "Caches publicly available content for speed")  
 
 ' Containers
-Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
-  
+Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Cluster"){  
   Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
   
   Container(bff, "BFF", "Javascript, Typescript, Apollo, GraphQL", "Backend for frontend", "javascript_badge")
@@ -48,7 +47,7 @@ Container_Boundary(fabric_app, "Fabric Azure Landing Zone"){
   Container(service_product, "Rest API", "Javascript, Typescript, Nest.js", "Product Domain Service", "nestjs_wordmark")  
   Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
   Container(service_search, "Rest API", "Javascript, Typescript, Nest.js", "Search Domain Service", "nestjs_wordmark")  
-  Container(service_order, "Rest API", "Javascript, Typescript, Nest.js", "Order Domain Service", "nestjs_wordmark")
+  Container(service_order, "Rest API", "Javascript, Typescript, Nest.js", "Order Domain Service", "nestjs_wordmark")  
 }
 
 ' Container_Boundary(eip, "Enterprise Integration Platform"){
