@@ -15,6 +15,8 @@
 !include DEVICONS/react.puml
 !include DEVICONS/swift.puml
 !include DEVICONS/mongodb.puml
+!include DEVICONS/angular.puml
+!include DEVICONS/dotnet.puml
 
 !include DEVICONS2/nextjs_original_wordmark.puml
 !include DEVICONS2/yarn_wordmark.puml
@@ -30,46 +32,55 @@ skinparam wrapWidth 200
 UpdateSkinparamsAndLegendEntry("external_system", $bgColor=Red, $fontColor=White, $borderColor=Black)
 
 Person(customer, "Customer", "A customer", users)
-' LAYOUT_LEFT_RIGHT()
-LAYOUT_TOP_DOWN()
+LAYOUT_LEFT_RIGHT()
+' LAYOUT_TOP_DOWN()
 
 ' TODO: Bound in an Azure Container when this is understood
 AzureCDN(cdn, "CDN", "Akamai", "Caches publicly available content for speed")  
 
 ' Containers
 Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Cluster"){  
-  Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
-  
-  Container(bff, "BFF", "Javascript, Typescript, Apollo, GraphQL", "Backend for frontend", "javascript_badge")
-  
-  Container(service_content, "Rest API", "Javascript, Typescript, Nest.js", "Content Domain Service", "nestjs_wordmark")
-  Container(service_cms_configuration, "Rest API", "Javascript, Typescript, Nest.js", "CMS Configuration Service", "nestjs_wordmark")
-  Container(service_cart, "Rest API", "Javascript, Typescript, Nest.js", "Cart Domain Service", "nestjs_wordmark")
-  Container(service_product, "Rest API", "Javascript, Typescript, Nest.js", "Product Domain Service", "nestjs_wordmark")  
-  Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
-  Container(service_search, "Rest API", "Javascript, Typescript, Nest.js", "Search Domain Service", "nestjs_wordmark")  
-  Container(service_order, "Rest API", "Javascript, Typescript, Nest.js", "Order Domain Service", "nestjs_wordmark")  
+	' B2C offering
+	Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
 
-  Container(mock_vendor, "Rest API", "Javascript, Typescript, Nest.js", "Vendor Mocking Service", "nestjs_wordmark") 
-  ContainerDb(mongo_db, "Scenario and mutation storage", "MongoDb", "Data storage", "mongodb")
+	Container(bff, "BFF", "Javascript, Typescript, Apollo, GraphQL", "Backend for frontend", "javascript_badge")
+	' Services
+	Container(service_content, "Rest API", "Javascript, Typescript, Nest.js", "Content Domain Service", "nestjs_wordmark")
+	Container(service_cms_configuration, "Rest API", "Javascript, Typescript, Nest.js", "CMS Configuration Service", "nestjs_wordmark")
+	Container(service_cart, "Rest API", "Javascript, Typescript, Nest.js", "Cart Domain Service", "nestjs_wordmark")
+	Container(service_product, "Rest API", "Javascript, Typescript, Nest.js", "Product Domain Service", "nestjs_wordmark")  
+	Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
+	Container(service_search, "Rest API", "Javascript, Typescript, Nest.js", "Search Domain Service", "nestjs_wordmark")  
+	Container(service_order, "Rest API", "Javascript, Typescript, Nest.js", "Order Domain Service", "nestjs_wordmark")  
+
+	Container(mock_vendor, "Rest API", "Javascript, Typescript, Nest.js", "Vendor Mocking Service", "nestjs_wordmark") 
+	ContainerDb(mongo_db, "Scenario and mutation storage", "MongoDb", "Data storage", "mongodb") 
+  	
+	' External Systems
+	System_Ext(contentstack, "Contentstack", "Headless CMS", "cubes")
+	System_Ext(commerce_tools, "Commercetools", "Headless Commerce", "cubes")
+
+	System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")	
+	System_Ext(worldpay, "Worldpay", "(Discussion) EFT to wire money via SWIFT", "cubes")
+	System_Ext(ikano, "Staff discounts", "(Discussion) Ikano Rewards for discounts", "cubes")
 }
 
-' Container_Boundary(eip, "Enterprise Integration Platform"){
-' }
+' Hybris
+Container_Boundary(hybris, "Hybris Azure Platform (For discussion)"){	
+	Container(hybris_app, "Current Newlook Website", "Angular", "Newlook.com", "angular")
+	Container(hybris_api, "Cookies and Rest API", "Java and SAP SDK", "Hybris API", "java")
+	System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
+	System_Ext(sap_cdc, "SAP CIAM", "SAP customer and identity access management", "cubes")
+}
+
+System_Boundary(eip, "Enterprise Integration Platform"){
+	System(eip_platform, "EIP", "MassTransit application.", "dotnet")	
+}
 
 Container_Boundary(mobile_device, "Mobile Device") {
   Container(ios_app, "Fabric IOS Mobile App", "Swift", "IOS Mobile Application", "swift")
   Container(android_app, "Fabric Android Mobile", "Java", "Android Mobile Application", "java")    
 }
-
-' External Systems
-System_Ext(contentstack, "Contentstack", "Headless CMS", "cubes")
-System_Ext(commerce_tools, "Commercetools", "Headless Commerce", "cubes")
-System_Ext(sap_cdc, "SAP CIAM", "SAP customer and identity access management", "cubes")
-System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")
-System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
-System_Ext(worldpay, "Worldpay", "EFT to wire money via SWIFT", "cubes")
-System_Ext(ikano, "Staff discounts", "Ikano Rewards for discounts", "cubes")
 
 ' People
 ' NOTE The CDN is incorrectly mapped, added for example sake 
@@ -104,6 +115,7 @@ Rel(bff, service_order, "Uses", "HTTP")
 Rel(service_cart, commerce_tools, "Uses", "HTTP, Headless")
 Rel(service_product, commerce_tools, "Uses", "HTTP, Headless")
 Rel(service_product, mock_vendor, "or Uses product mock", "HTTP")
+Rel(eip_platform, commerce_tools, "Configures", "Mass Transit messaging and event processing")
 
 ' Contentstack
 Rel(service_content, contentstack, "Uses", "HTTP, Headless")
@@ -111,19 +123,20 @@ Rel(service_content, mock_vendor, "or Uses content mock", "HTTP")
 
 Rel(service_cms_configuration, contentstack, "Configures", "HTTP, Headless")
 
-' SAP CDC
-Rel(service_customer, sap_cdc, "Uses", "HTTP")
-
 ' Attraqt
 Rel(service_search, attraqt, "Uses", "HTTP")
 
 ' SAP Hybris
-Rel(service_order, sap_hybris, "Uses", "Azure message bus")
-Rel(bff, sap_hybris, "Uses", "who-am-i endpoint")
+Rel(hybris_app, hybris_api, "Uses", "HTTP Hybris API/SDK")
+Rel(hybris_api, sap_hybris, "Uses", "HTTP Hybris API/SDK")
+Rel(hybris_api, sap_cdc, "Uses", "HTTP Hybris API/SDK")
+Rel(service_order, hybris_app, "Uses", "Cookies and Http")
+Rel(service_customer, hybris_api, "Uses", "HTTP")
+Rel(bff, hybris_api, "Uses", "who-am-i endpoint")
 Rel(bff, mock_vendor, "or Uses who-am-i mock", "HTTP")
 
 'Mock Vendors
-Rel(mock_vendor, mongo_db, "Use Database")
+Rel(mock_vendor, mongo_db, "Uses", "Mongoose")
 
 SHOW_DYNAMIC_LEGEND()
 
