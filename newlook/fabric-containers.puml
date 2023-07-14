@@ -48,6 +48,8 @@ Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Clust
   Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
   Container(service_search, "Rest API", "Javascript, Typescript, Nest.js", "Search Domain Service", "nestjs_wordmark")  
   Container(service_order, "Rest API", "Javascript, Typescript, Nest.js", "Order Domain Service", "nestjs_wordmark")  
+
+  Container(mock_vendor, "Rest API", "Javascript, Typescript, Nest.js", "Vendor Mocking Service", "nestjs_wordmark")  
 }
 
 ' Container_Boundary(eip, "Enterprise Integration Platform"){
@@ -64,8 +66,8 @@ System_Ext(commerce_tools, "Commercetools", "Headless Commerce", "cubes")
 System_Ext(sap_cdc, "SAP CIAM", "SAP customer and identity access management", "cubes")
 System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")
 System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
-' System_Ext(worldpay, "Worldpay", "EFT to wire money via SWIFT", "cubes")
-' System_Ext(ikano, "Staff discounts", "Ikano Rewards for discounts", "cubes")
+System_Ext(worldpay, "Worldpay", "EFT to wire money via SWIFT", "cubes")
+System_Ext(ikano, "Staff discounts", "Ikano Rewards for discounts", "cubes")
 
 ' People
 ' NOTE The CDN is incorrectly mapped, added for example sake 
@@ -77,30 +79,16 @@ Rel_Back(cdn, android_app, "Caches and routes")
 Rel(cdn, web_app, "Caches and routes")
 
 ' Other vendors
-' Rel(web_app, worldpay, "Make payments via", "API, Http")
-' Rel(web_app, ikano, "Get staff discounts via", "API, Http")
+Rel(web_app, worldpay, "Make payments via", "API, Http")
+Rel(web_app, ikano, "Get staff discounts via", "API, Http")
 
 ' BFF
 Rel(web_app, bff, "Uses", "GraphQL, GQL, HTTP")
 
 ' API's
 Rel(ios_app, bff, "Uses", "GraphQL, GQL, HTTP")
-' Rel(ios_app, service_content, "Uses", "HTTP")
-' Rel(ios_app, service_cms_configuration, "Uses", "HTTP")
-' Rel(ios_app, service_cart, "Uses", "HTTP")
-' Rel(ios_app, service_product, "Uses", "HTTP")
-' Rel(ios_app, service_customer, "Uses", "HTTP")
-' Rel(ios_app, service_search, "Uses", "HTTP")
-' Rel(ios_app, service_order, "Uses", "HTTP")
 
 Rel(android_app, bff, "Uses", "GraphQL, GQL, HTTP")
-' Rel(android_app, service_content, "Uses", "HTTP")
-' Rel(android_app, service_cms_configuration, "Uses", "HTTP")
-' Rel(android_app, service_cart, "Uses", "HTTP")
-' Rel(android_app, service_product, "Uses", "HTTP")
-' Rel(android_app, service_customer, "Uses", "HTTP")
-' Rel(android_app, service_search, "Uses", "HTTP")
-' Rel(android_app, service_order, "Uses", "HTTP")
 
 Rel(bff, service_content, "Uses", "HTTP")
 ' Rel(bff, service_cms_configuration, "Uses", "HTTP")
@@ -113,9 +101,12 @@ Rel(bff, service_order, "Uses", "HTTP")
 ' Commerce Tools
 Rel(service_cart, commerce_tools, "Uses", "HTTP, Headless")
 Rel(service_product, commerce_tools, "Uses", "HTTP, Headless")
+Rel(service_product, mock_vendor, "or Uses product mock", "HTTP")
 
 ' Contentstack
 Rel(service_content, contentstack, "Uses", "HTTP, Headless")
+Rel(service_content, mock_vendor, "or Uses content mock", "HTTP")
+
 Rel(service_cms_configuration, contentstack, "Configures", "HTTP, Headless")
 
 ' SAP CDC
@@ -127,6 +118,7 @@ Rel(service_search, attraqt, "Uses", "HTTP")
 ' SAP Hybris
 Rel(service_order, sap_hybris, "Uses", "Azure message bus")
 Rel(bff, sap_hybris, "Uses", "who-am-i endpoint")
+Rel(bff, mock_vendor, "or Uses who-am-i mock", "HTTP")
 
 SHOW_DYNAMIC_LEGEND()
 
