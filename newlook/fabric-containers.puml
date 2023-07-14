@@ -14,6 +14,7 @@
 !include DEVICONS/npm.puml
 !include DEVICONS/react.puml
 !include DEVICONS/swift.puml
+!include DEVICONS/mongodb.puml
 
 !include DEVICONS2/nextjs_original_wordmark.puml
 !include DEVICONS2/yarn_wordmark.puml
@@ -49,7 +50,8 @@ Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Clust
   Container(service_search, "Rest API", "Javascript, Typescript, Nest.js", "Search Domain Service", "nestjs_wordmark")  
   Container(service_order, "Rest API", "Javascript, Typescript, Nest.js", "Order Domain Service", "nestjs_wordmark")  
 
-  Container(mock_vendor, "Rest API", "Javascript, Typescript, Nest.js", "Vendor Mocking Service", "nestjs_wordmark")  
+  Container(mock_vendor, "Rest API", "Javascript, Typescript, Nest.js", "Vendor Mocking Service", "nestjs_wordmark") 
+  ContainerDb(mongo_db, "Scenario and mutation storage", "MongoDb", "Data storage", "mongodb")
 }
 
 ' Container_Boundary(eip, "Enterprise Integration Platform"){
@@ -119,6 +121,9 @@ Rel(service_search, attraqt, "Uses", "HTTP")
 Rel(service_order, sap_hybris, "Uses", "Azure message bus")
 Rel(bff, sap_hybris, "Uses", "who-am-i endpoint")
 Rel(bff, mock_vendor, "or Uses who-am-i mock", "HTTP")
+
+'Mock Vendors
+Rel(mock_vendor, mongo_db, "Use Database")
 
 SHOW_DYNAMIC_LEGEND()
 
