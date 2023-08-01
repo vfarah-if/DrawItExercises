@@ -113,6 +113,7 @@ Rel(bff, service_order, "Uses", "HTTP")
 
 ' Commerce Tools
 Rel(service_cart, commerce_tools, "Uses", "HTTP, Headless")
+Rel(service_cart, mock_vendor, "or Uses cart mock", "HTTP")
 Rel(service_product, commerce_tools, "Uses", "HTTP, Headless")
 Rel(service_product, mock_vendor, "or Uses product mock", "HTTP")
 Rel(eip_platform, commerce_tools, "Configures", "Mass Transit messaging and event processing")
@@ -120,17 +121,18 @@ Rel(eip_platform, commerce_tools, "Configures", "Mass Transit messaging and even
 ' Contentstack
 Rel(service_content, contentstack, "Uses", "HTTP, Headless")
 Rel(service_content, mock_vendor, "or Uses content mock", "HTTP")
-
 Rel(service_cms_configuration, contentstack, "Configures", "HTTP, Headless")
 
 ' Attraqt
 Rel(service_search, attraqt, "Uses", "HTTP")
+Rel(service_search, mock_vendor, "or Uses attraqt mock", "HTTP")
 
 ' SAP Hybris
 Rel(hybris_app, hybris_api, "Uses", "HTTP Hybris API/SDK")
 Rel(hybris_api, sap_hybris, "Uses", "HTTP Hybris API/SDK")
 Rel(hybris_api, sap_cdc, "Uses", "HTTP Hybris API/SDK")
 Rel(service_order, hybris_app, "Uses", "Cookies and Http")
+Rel(service_order, mock_vendor, "or Uses order mock", "HTTP")
 Rel(service_customer, hybris_api, "Uses", "HTTP")
 Rel(bff, hybris_api, "Uses", "who-am-i endpoint")
 Rel(bff, mock_vendor, "or Uses who-am-i mock", "HTTP")
