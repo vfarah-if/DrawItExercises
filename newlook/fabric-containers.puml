@@ -8,6 +8,7 @@
 
 !includeurl AzurePuml/AzureCommon.puml
 !includeurl AzurePuml/Web/AzureCDN.puml
+!includeurl AzurePuml/Storage/AzureStorSimple.puml
 
 !include DEVICONS/java.puml
 !include DEVICONS/javascript_badge.puml
@@ -42,11 +43,12 @@ AzureCDN(cdn, "CDN", "Akamai", "Caches publicly available content for speed")
 Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Cluster"){  
 	' B2C offering
 	Container(web_app, "Fabric b2c Channel Web App", "Javascript, Typescript, Next.js, React", "Web application", "nextjs_original_wordmark")
-
 	Container(bff, "BFF", "Javascript, Typescript, Apollo, GraphQL", "Backend for frontend", "javascript_badge")
-	' Services
-	Container(service_content, "Rest API", "Javascript, Typescript, Nest.js", "Content Domain Service", "nestjs_wordmark")
+	' Script configuration tools
 	Container(service_cms_configuration, "Rest API", "Javascript, Typescript, Nest.js", "CMS Configuration Service", "nestjs_wordmark")
+	Container(script_feature_flags, "Node app", "Javascript, Typescript", "Feature flags configuration", "javascript_badge")
+	' Services
+	Container(service_content, "Rest API", "Javascript, Typescript, Nest.js", "Content Domain Service", "nestjs_wordmark")	
 	Container(service_cart, "Rest API", "Javascript, Typescript, Nest.js", "Cart Domain Service", "nestjs_wordmark")
 	Container(service_product, "Rest API", "Javascript, Typescript, Nest.js", "Product Domain Service", "nestjs_wordmark")  
 	Container(service_customer, "Rest API", "Javascript, Typescript, Nest.js", "Customer Domain Service", "nestjs_wordmark")  
@@ -55,6 +57,7 @@ Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Clust
 
 	Container(mock_vendor, "Rest API", "Javascript, Typescript, Nest.js", "Vendor Mocking Service", "nestjs_wordmark") 
 	ContainerDb(mongo_db, "Scenario and mutation storage", "MongoDb", "Data storage", "mongodb") 
+	ContainerDb(azure_table_storage, "Customer and anonymous users", "TableStorage", "User storage", "AzureStorSimple") 
   	
 	' External Systems
 	System_Ext(contentstack, "Contentstack", "Headless CMS", "cubes")
@@ -104,7 +107,6 @@ Rel(ios_app, bff, "Uses", "GraphQL, GQL, HTTP")
 Rel(android_app, bff, "Uses", "GraphQL, GQL, HTTP")
 
 Rel(bff, service_content, "Uses", "HTTP")
-' Rel(bff, service_cms_configuration, "Uses", "HTTP")
 Rel(bff, service_cart, "Uses", "HTTP")
 Rel(bff, service_product, "Uses", "HTTP")
 Rel(bff, service_customer, "Uses", "HTTP")
@@ -134,11 +136,17 @@ Rel(hybris_api, sap_cdc, "Uses", "HTTP Hybris API/SDK")
 Rel(service_order, hybris_app, "Uses", "Cookies and Http")
 Rel(service_order, mock_vendor, "or Uses order mock", "HTTP")
 Rel(service_customer, hybris_api, "Uses", "HTTP")
+Rel(service_product, hybris_api, "Uses", "HTTP")
 Rel(bff, hybris_api, "Uses", "who-am-i endpoint")
 Rel(bff, mock_vendor, "or Uses who-am-i mock", "HTTP")
 
 'Mock Vendors
 Rel(mock_vendor, mongo_db, "Uses", "Mongoose")
+
+'Azure Table Storage
+Rel(service_customer, azure_table_storage, "Uses", "Azure Table Storage")
+
+
 
 SHOW_DYNAMIC_LEGEND()
 
