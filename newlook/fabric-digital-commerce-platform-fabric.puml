@@ -14,6 +14,7 @@
 !includeurl AzurePuml/Databases/AzureCosmosDb.puml
 !includeurl AzurePuml/Databases/AzureDatabaseForPostgreSQL.puml
 !includeurl AzurePuml/Analytics/AzureEventHub.puml
+!includeurl AzurePuml/Integration/AzureServiceBus.puml
 
 !include DEVICONS/java.puml
 !include DEVICONS/mongodb.puml
@@ -30,8 +31,8 @@ skinparam wrapWidth 200
 UpdateSkinparamsAndLegendEntry("external_system", $bgColor=Red, $fontColor=White, $borderColor=Black)
 
 
-' LAYOUT_LEFT_RIGHT()
-LAYOUT_TOP_DOWN()
+LAYOUT_LEFT_RIGHT()
+' LAYOUT_TOP_DOWN()
 
 ' People
 Person(system_user, "System Integrators", "Connect different systems within an enterprise", users)
@@ -39,50 +40,53 @@ Person(dev_user, "Application Developers", "Build modular and scalable systems",
 Person(sre_user, "Site Reliability Engineers", "Use message brokers to monitor and manage system health", users)
 
 ' Containers
-Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Cluster"){  
+Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Workload Cluster"){  
 	' Microservices
 	Container(commander.console, "Commander.Console", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
 	Container(fabric.console, "Fabric(Product).Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	AzureCosmosDb(cosmos_db, "CosmosDb", "Cosmos NoSQL or MongoDb") 
-	AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
-	AzureEventHub(eventhub_cluster, "AzureEventHubs", "Azure Event Hub Cluster") 
-	
+	' AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
+	AzureEventHub(eventhub_cluster, "EventHubs", "Azure Event Hub Cluster or Broker") 
+	AzureServiceBus(service_bus, "ServiceBus", "Azure Service Bus") 
 
 	' External System
 	System_Ext(fredhopper, "Attraqt or Fredhopper", "Ecommerce Solutions and Search", "cubes")	
 }
 
-' Hybris
-Container_Boundary(hybris, "Hybris Azure Platform"){	
-	Container(hybris_api, "Cookies and Rest API", "Java and SAP SDK", "Hybris API", "java")
+' Hybris Systems
+System(hybris, "Hybris Azure Platform (Discussion detail only)"){	
+	Container(hybris_api, "Hybris API", "Java and SAP SDK", "Hybris API", "java")
 	System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
 	System_Ext(sap_cdc, "SAP CIAM or GIGYA", "SAP customer and identity access management", "cubes")	
 }
 
 ' People
-Rel(system_user, fabric_app, "Producer/Consumer", "AMQP, Native")
-Rel(dev_user, fabric_app, "Producer/Consumer", "AMQP, Native")
-Rel(sre_user, fabric_app, "Producer/Consumer", "AMQP, Native")
+Rel(system_user, fabric_dcp, "Uses", "AMQP")
+Rel(dev_user, fabric_dcp, "Uses", "AMQP")
+Rel(sre_user, fabric_dcp, "Uses", "AMQP")
 
 
 ' Container relationships
-Rel(hybris, fabric_app, "Producer", "AMQP, Native")
+Rel(hybris, fabric_dcp, "Produces", "AMQP")
 
 ' Commander Console
 
 Rel(commander.console, fabric.console, "Commands", "AMQP")
 
 ' Fabric (currently Product) Microservice
-Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
-Rel(fabric.console, eventhub_cluster, "Produces and Consumes", "AMQP")
+' Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
+Rel(fabric.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(fabric.console, search.console,, "Produces Events", "AMQP")
+Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
 
 
 ' Search Microservice
-Rel(search.console, fredhopper, "Uses", "Service Bus")
-Rel(search.console, cosmos_db, "Uses", "Service Bus")
-Rel(search.console, cosmos_postgres_db, "Uses", "Service Bus")
+Rel(search.console, service_bus, "Uses", "Message Broker")
+Rel(service_bus, cosmos_db, "Uses", "Database")
+' Rel(service_bus, cosmos_postgres_db, "Uses", "Database")
+Rel(eventhub_cluster, search.console, "Consumes Streamed Message", "AMQP")
+Rel(service_bus, fredhopper, "Populates", "Vendor")
 
 
 ' SAP Hybris
