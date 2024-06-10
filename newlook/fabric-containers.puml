@@ -67,7 +67,6 @@ Container_Boundary(fabric_app, "Fabric Azure Compliant Kubernetes Workload Clust
 	System_Ext(commerce_tools, "Commercetools", "Headless Commerce", "cubes")
 
 	System_Ext(attraqt, "Attraqt", "Ecommerce Solutions and Search", "cubes")	
-	System_Ext(ikano, "Staff discounts", "(Discussion) Ikano Rewards for discounts", "cubes")
 }
 
 ' Hybris
@@ -78,8 +77,8 @@ Container_Boundary(hybris, "Hybris Azure Platform (For discussion)"){
 	System_Ext(sap_cdc, "SAP CIAM or GIGYA", "SAP customer and identity access management", "cubes")	
 }
 
-System_Boundary(eip, "Enterprise Integration Platform"){
-	System(eip_platform, "EIP", "MassTransit application.", "dotnet")	
+System_Boundary(eip, "Digital Commerce Platform"){
+	System(dcp_platform, "DCP", "Event hubs and Massransit application", "dotnet")	
 }
 
 Container_Boundary(mobile_device, "Mobile Device") {
@@ -95,9 +94,6 @@ Rel(customer, android_app, "uses app", "Native")
 Rel_Back(cdn, ios_app, "Caches and routes")
 Rel_Back(cdn, android_app, "Caches and routes")
 Rel(cdn, web_app, "Caches and routes")
-
-' Other vendors
-Rel(web_app, ikano, "Get staff discounts via", "API, Http")
 
 ' BFF
 Rel(web_app, bff, "Uses", "GraphQL, GQL, HTTP")
@@ -121,7 +117,7 @@ Rel(service_cart, wire_mock, "or Uses cart mock", "HTTP")
 Rel(service_product, commerce_tools, "Uses", "HTTP, Headless")
 ' Rel(service_product, mock_vendor, "or Uses product mock", "HTTP")
 Rel(service_product, wire_mock, "or Uses product mock", "HTTP")
-Rel(eip_platform, commerce_tools, "Configures", "Mass Transit messaging and event processing")
+Rel(dcp_platform, commerce_tools, "Configures", "Event Hub and Mass Transit messaging and event processing")
 
 ' Contentstack
 Rel(service_content, contentstack, "Uses", "HTTP, Headless")
@@ -133,6 +129,8 @@ Rel(service_cms_configuration, contentstack, "Configures", "HTTP, Headless")
 Rel(service_search, attraqt, "Uses", "HTTP")
 ' Rel(service_search, mock_vendor, "or Uses attraqt mock", "HTTP")
 Rel(service_search, wire_mock, "or Uses attraqt mock", "HTTP")
+Rel(dcp_platform, service_search, "Configures", "Event Hub and Mass Transit messaging and event processing")
+
 
 ' SAP Hybris
 Rel(hybris_app, hybris_api, "Uses", "HTTP Hybris API/SDK")
