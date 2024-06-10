@@ -97,7 +97,6 @@ Rel_Back(cdn, android_app, "Caches and routes")
 Rel(cdn, web_app, "Caches and routes")
 
 ' Other vendors
-Rel(web_app, worldpay, "Make payments via", "API, Http")
 Rel(web_app, ikano, "Get staff discounts via", "API, Http")
 
 ' BFF
