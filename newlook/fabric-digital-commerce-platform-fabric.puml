@@ -86,7 +86,9 @@ Rel(search.console, service_bus, "Uses", "Message Broker")
 Rel(service_bus, cosmos_db, "Uses", "Database")
 ' Rel(service_bus, cosmos_postgres_db, "Uses", "Database")
 Rel(eventhub_cluster, search.console, "Consumes Streamed Message", "AMQP")
+Rel(search.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(service_bus, fredhopper, "Populates", "Vendor")
+
 
 
 ' SAP Hybris
