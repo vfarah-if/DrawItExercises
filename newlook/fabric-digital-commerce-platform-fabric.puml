@@ -52,9 +52,11 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	' Message and Stream Brokers
 	AzureEventHub(eventhub_cluster, "EventHubs", "Azure Event Hub Cluster or Broker") 
 	AzureServiceBus(service_bus, "ServiceBus", "Azure Service Bus") 
-
 	' External System
 	System_Ext(fredhopper, "Attraqt or Fredhopper", "Ecommerce Solutions and Search", "cubes")	
+	
+	' Templating engine
+	Container(dcp.template, ".NetCore Templating Engine", "Dotnet C#", "Digital.Commerce.Platform.Templates", "dotnet")
 }
 
 ' Hybris Systems
@@ -94,11 +96,14 @@ Rel(eventhub_cluster, search.console, "Consumes Streamed Message", "AMQP")
 Rel(search.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(service_bus, fredhopper, "Populates", "Vendor")
 
-
-
 ' SAP Hybris
 Rel(hybris_api, sap_hybris, "Uses", "HTTP Hybris API/SDK")
 Rel(hybris_api, sap_cdc, "Uses", "HTTP Hybris API/SDK")
+
+' Templating
+' Rel(dcp.template, fabric.console, "Generates", "via Command line")
+' Rel(dcp.template, search.console, "Generates", "via Command line")
+
 
 SHOW_DYNAMIC_LEGEND()
 
