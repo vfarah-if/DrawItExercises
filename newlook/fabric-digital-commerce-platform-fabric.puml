@@ -45,8 +45,11 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	Container(commander.console, "Commander.Console", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
 	Container(fabric.console, "Fabric(Product).Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
+	' Databases
 	AzureCosmosDb(cosmos_db, "CosmosDb", "Cosmos NoSQL or MongoDb") 
-	' AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
+	AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
+	Container(mongo_db_docker, "MongoDb", "Dockerised Local MongoDb", "MongoDb", "docker") 	
+	' Message and Stream Brokers
 	AzureEventHub(eventhub_cluster, "EventHubs", "Azure Event Hub Cluster or Broker") 
 	AzureServiceBus(service_bus, "ServiceBus", "Azure Service Bus") 
 
@@ -75,7 +78,7 @@ Rel(hybris, fabric_dcp, "Produces", "AMQP")
 Rel(commander.console, fabric.console, "Commands", "AMQP")
 
 ' Fabric (currently Product) Microservice
-' Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
+Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
 Rel(fabric.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(fabric.console, search.console,, "Produces Events", "AMQP")
 Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
@@ -83,8 +86,10 @@ Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
 
 ' Search Microservice
 Rel(search.console, service_bus, "Uses", "Message Broker")
-Rel(service_bus, cosmos_db, "Uses", "Database")
-' Rel(service_bus, cosmos_postgres_db, "Uses", "Database")
+Rel(service_bus, cosmos_db, "Uses", "Cosmos Database")
+Rel(service_bus, cosmos_postgres_db, "Uses", "Cosmos Database")
+Rel(service_bus, mongo_db_docker, "Uses", "Local Database")
+
 Rel(eventhub_cluster, search.console, "Consumes Streamed Message", "AMQP")
 Rel(search.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(service_bus, fredhopper, "Populates", "Vendor")
