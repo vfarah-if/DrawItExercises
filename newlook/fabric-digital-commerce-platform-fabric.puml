@@ -73,11 +73,11 @@ Rel(sre_user, fabric_dcp, "Uses", "AMQP")
 
 
 ' Container relationships
-Rel(hybris, fabric_dcp, "Produces", "AMQP")
+Rel(hybris, eventhub_cluster, "Produces", "AMQP")
 
 ' Commander Console
 
-Rel(commander.console, fabric.console, "Commands", "AMQP")
+Rel(commander.console, eventhub_cluster, "Commands", "AMQP")
 
 ' Fabric (currently Product) Microservice
 Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
