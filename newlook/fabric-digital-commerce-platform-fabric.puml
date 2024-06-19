@@ -43,7 +43,7 @@ Person(sre_user, "Site Reliability Engineers", "Use message brokers to monitor a
 Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Workload Cluster"){  
 	' Microservices
 	Container(commander.console, "Commander.Console", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
-	Container(fabric.console, "Fabric(Product).Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
+	Container(fabric.console, "Fabric.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	' Databases
 	AzureCosmosDb(cosmos_db, "CosmosDb", "Cosmos NoSQL or MongoDb") 
