@@ -42,6 +42,7 @@ Person(system_user, "System Integrators", "Connect different systems within an e
 Person(dev_user, "Application Developers", "Build modular and scalable systems", users)
 Person(sre_user, "Site Reliability Engineers", "Use message brokers to monitor and manage system health", users)
 
+
 ' Containers
 Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Workload Cluster"){  
 	' Microservices
@@ -50,7 +51,7 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	' Storage
 	AzureBlobStorage(blob_storage, "Blob Storage", "File Storage For Category, Product and Adobe data")
-	AzureEventGrid(event_grid, "Event Grid", "Event Triggers to Service Bus Queue")
+	AzureEventGrid(event_grid, "Event Grid", "Event Triggers to Service Bus Queue")	
 	' Databases
 	AzureCosmosDb(cosmos_db, "CosmosDb", "Cosmos NoSQL or MongoDb") 
 	AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
@@ -71,6 +72,14 @@ System(hybris, "Hybris Azure Platform (Discussion detail only)"){
 	System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
 	System_Ext(sap_cdc, "SAP CIAM or GIGYA", "SAP customer and identity access management", "cubes")	
 }
+
+' rectangle "website" {
+'   database "Affiliated Stock Feed" "uk/affiliates/stockfeed.xml" #orange
+' }
+
+' Rel(commander.console, website, "Gets online stockfeed", "HTTP Request every 15 minutes")
+' Rel(website, commander.console, "Streams stockfeed", "HTTP Response")
+' Rel(website, sap_hybris, "Uses", "API")
 
 ' People
 Rel(system_user, fabric_dcp, "Uses", "AMQP")
