@@ -22,6 +22,7 @@
 !include DEVICONS/java.puml
 !include DEVICONS/mongodb.puml
 !include DEVICONS/dotnet.puml
+!include DEVICONS/angular.puml
 
 !include DEVICONS2/docker.puml
 
@@ -71,15 +72,13 @@ System(hybris, "Hybris Azure Platform (Discussion detail only)"){
 	Container(hybris_api, "Hybris API", "Java and SAP SDK", "Hybris API", "java")
 	System_Ext(sap_hybris, "SAP Hybris", "Ecommerce platform B2B B2C", "cubes")
 	System_Ext(sap_cdc, "SAP CIAM or GIGYA", "SAP customer and identity access management", "cubes")	
+	Container(hybris_app, "Current Newlook Website", "Angular", "Newlook.com", "angular")
 }
 
-' rectangle "website" {
-'   database "Affiliated Stock Feed" "uk/affiliates/stockfeed.xml" #orange
-' }
 
-' Rel(commander.console, website, "Gets online stockfeed", "HTTP Request every 15 minutes")
-' Rel(website, commander.console, "Streams stockfeed", "HTTP Response")
-' Rel(website, sap_hybris, "Uses", "API")
+Rel(commander.console, hybris_app, "Gets online stockfeed", "HTTP Request every 15 minutes")
+Rel(hybris_app, commander.console, "Streams XML Inventory stockfeed", "HTTP Response")
+
 
 ' People
 Rel(system_user, fabric_dcp, "Uses", "AMQP")
