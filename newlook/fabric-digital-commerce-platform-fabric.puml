@@ -15,6 +15,9 @@
 !includeurl AzurePuml/Databases/AzureDatabaseForPostgreSQL.puml
 !includeurl AzurePuml/Analytics/AzureEventHub.puml
 !includeurl AzurePuml/Integration/AzureServiceBus.puml
+!includeurl AzurePuml/Storage/AzureBlobStorage.puml
+!includeurl AzurePuml/Integration/AzureEventGrid.puml
+
 
 !include DEVICONS/java.puml
 !include DEVICONS/mongodb.puml
@@ -45,6 +48,9 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	Container(commander.console, "Commander.Console", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
 	Container(fabric.console, "Fabric.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
+	' Storage
+	AzureBlobStorage(blob_storage, "Blob Storage", "File Storage For Category, Product and Adobe data")
+	AzureEventGrid(event_grid, "Event Grid", "Event Triggers to Service Bus Queue")
 	' Databases
 	AzureCosmosDb(cosmos_db, "CosmosDb", "Cosmos NoSQL or MongoDb") 
 	AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
@@ -75,9 +81,16 @@ Rel(sre_user, fabric_dcp, "Uses", "AMQP")
 ' Container relationships
 Rel(hybris, eventhub_cluster, "Produces", "AMQP")
 
+' File Storage Eventing 
+Rel(blob_storage, event_grid, "File upload trigers event", "BlobCreated")
+Rel(event_grid, service_bus, "Triggers Queue", "BlobCreatedEvent")
+Rel(service_bus, eventhub_cluster, "Push Products", "ProductCreatedEvent")
+
 ' Commander Console
 
 Rel(commander.console, eventhub_cluster, "Commands", "AMQP")
+Rel(commander.console, blob_storage, "Uploads file", "HTTP/HTTPS/SDK")
+Rel(sap_hybris, blob_storage, "Uploads file", "HTTP/HTTPS/SDK")
 
 ' Fabric (currently Product) Microservice
 Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
