@@ -105,7 +105,11 @@ Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
 
 
 ' Search Microservice
-Rel(search.console, service_bus, "Uses", "Message Broker")
+Rel(search.console, service_bus, "Produces Messages", "Message Producer")
+Rel(fabric.console, service_bus, "Produces Messages", "Message Producer")
+Rel(service_bus, search.console, "Consumes Messages", "Message Broker")
+Rel(service_bus, fabric.console, "Consumes Messages", "Message Broker")
+
 Rel(service_bus, cosmos_db, "Uses", "Cosmos Database")
 ' Rel(service_bus, cosmos_postgres_db, "Uses", "Cosmos Database")
 ' Rel(service_bus, mongo_db_docker, "Uses", "Local Database")
