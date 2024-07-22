@@ -55,8 +55,8 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	AzureEventGrid(event_grid, "Event Grid", "Event Triggers to Service Bus Queue")	
 	' Databases
 	AzureCosmosDb(cosmos_db, "CosmosDb", "Cosmos NoSQL or MongoDb") 
-	AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
-	Container(mongo_db_docker, "MongoDb", "Dockerised Local MongoDb", "MongoDb", "docker") 	
+	' AzureDatabaseForPostgreSQL(cosmos_postgres_db, "CosmosDb", "Mongodb, Postgres and NoSQL") 
+	' Container(mongo_db_docker, "MongoDb", "Dockerised Local MongoDb", "MongoDb", "docker") 	
 	' Message and Stream Brokers
 	AzureEventHub(eventhub_cluster, "EventHubs", "Azure Event Hub Cluster or Broker") 
 	AzureServiceBus(service_bus, "ServiceBus", "Azure Service Bus") 
@@ -75,16 +75,13 @@ System(hybris, "Hybris Azure Platform (Discussion detail only)"){
 	Container(hybris_app, "Current Newlook Website", "Angular", "Newlook.com", "angular")
 }
 
-
 Rel(commander.console, hybris_app, "Gets online stockfeed", "HTTP Request every 15 minutes")
 Rel(hybris_app, commander.console, "Streams XML Inventory stockfeed", "HTTP Response")
-
 
 ' People
 Rel(system_user, fabric_dcp, "Uses", "AMQP")
 Rel(dev_user, fabric_dcp, "Uses", "AMQP")
 Rel(sre_user, fabric_dcp, "Uses", "AMQP")
-
 
 ' Container relationships
 Rel(hybris, eventhub_cluster, "Produces", "AMQP")
@@ -101,7 +98,7 @@ Rel(commander.console, blob_storage, "Uploads file", "HTTP/HTTPS/SDK")
 Rel(sap_hybris, blob_storage, "Uploads file", "HTTP/HTTPS/SDK")
 
 ' Fabric (currently Product) Microservice
-Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
+' Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
 Rel(fabric.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(fabric.console, search.console,, "Produces Events", "AMQP")
 Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
@@ -110,8 +107,8 @@ Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
 ' Search Microservice
 Rel(search.console, service_bus, "Uses", "Message Broker")
 Rel(service_bus, cosmos_db, "Uses", "Cosmos Database")
-Rel(service_bus, cosmos_postgres_db, "Uses", "Cosmos Database")
-Rel(service_bus, mongo_db_docker, "Uses", "Local Database")
+' Rel(service_bus, cosmos_postgres_db, "Uses", "Cosmos Database")
+' Rel(service_bus, mongo_db_docker, "Uses", "Local Database")
 
 Rel(eventhub_cluster, search.console, "Consumes Streamed Message", "AMQP")
 Rel(search.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
@@ -120,11 +117,6 @@ Rel(service_bus, fredhopper, "Populates", "Vendor")
 ' SAP Hybris
 Rel(hybris_api, sap_hybris, "Uses", "HTTP Hybris API/SDK")
 Rel(hybris_api, sap_cdc, "Uses", "HTTP Hybris API/SDK")
-
-' Templating
-' Rel(dcp.template, fabric.console, "Generates", "via Command line")
-' Rel(dcp.template, search.console, "Generates", "via Command line")
-
 
 SHOW_DYNAMIC_LEGEND()
 
