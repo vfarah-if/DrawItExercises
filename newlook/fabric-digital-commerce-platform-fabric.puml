@@ -50,6 +50,7 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	Container(commander.console, "Commander.Console", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
 	Container(fabric.console, "Fabric.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
+	Container(inventory.console, "Inventory.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	' Storage
 	AzureBlobStorage(blob_storage, "Blob Storage", "File Storage For Category, Product and Adobe data")
 	AzureEventGrid(event_grid, "Event Grid", "Event Triggers to Service Bus Queue")	
@@ -89,7 +90,6 @@ Rel(hybris, eventhub_cluster, "Produces", "AMQP")
 ' File Storage Eventing 
 Rel(blob_storage, event_grid, "File upload trigers event", "BlobCreated")
 Rel(event_grid, service_bus, "Triggers Queue", "BlobCreatedEvent")
-Rel(service_bus, eventhub_cluster, "Push Products", "ProductCreatedEvent")
 
 ' Commander Console
 
@@ -101,14 +101,20 @@ Rel(sap_hybris, blob_storage, "Uploads file", "HTTP/HTTPS/SDK")
 ' Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
 Rel(fabric.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(fabric.console, search.console,, "Produces Events", "AMQP")
+Rel(inventory.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
+Rel(inventory.console, search.console,, "Produces Events", "AMQP")
+
 Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
+Rel(eventhub_cluster, inventory.console, "Consumes Streamed Message", "AMQP")
 
 
 ' Search Microservice
 Rel(search.console, service_bus, "Produces Messages", "Message Producer")
 Rel(fabric.console, service_bus, "Produces Messages", "Message Producer")
+Rel(inventory.console, service_bus, "Produces Messages", "Message Producer")
 Rel(service_bus, search.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, fabric.console, "Consumes Messages", "Message Broker")
+Rel(service_bus, inventory.console, "Consumes Messages", "Message Broker")
 
 Rel(service_bus, cosmos_db, "Uses", "Cosmos Database")
 ' Rel(service_bus, cosmos_postgres_db, "Uses", "Cosmos Database")
