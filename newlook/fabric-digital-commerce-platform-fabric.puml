@@ -46,11 +46,20 @@ Person(sre_user, "Site Reliability Engineers", "Use message brokers to monitor a
 
 ' Containers
 Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Workload Cluster"){  
-	' Microservices
+	' Utility
 	Container(commander.console, "Commander.Console", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
+	' Single instance
+	Container(fabric.commander.console, "FabricCommander", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
+	Container(search.commander.console, "SearchCommander", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
+	Container(inventory.commander.console, "InventoryCommander", "Dotnet C#", "Digital.Commerce.Platform Command Utility", "dotnet")
+
+	' Microservices
+	' Scaleable
 	Container(fabric.console, "Fabric.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(inventory.console, "Inventory.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
+	
+	
 	' Storage
 	AzureBlobStorage(blob_storage, "Blob Storage", "File Storage For Category, Product and Adobe data")
 	AzureEventGrid(event_grid, "Event Grid", "Event Triggers to Service Bus Queue")	
@@ -100,12 +109,17 @@ Rel(sap_hybris, blob_storage, "Uploads file", "HTTP/HTTPS/SDK")
 ' Fabric (currently Product) Microservice
 ' Rel(fabric.console, cosmos_postgres_db, "Uses", "Azure Service Bus")
 Rel(fabric.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
-Rel(fabric.console, search.console,, "Produces Events", "AMQP")
+Rel(fabric.console, search.console, "Produces Events", "AMQP")
 Rel(inventory.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
-Rel(inventory.console, search.console,, "Produces Events", "AMQP")
+Rel(inventory.console, search.console, "Produces Events", "AMQP")
 
 Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
 Rel(eventhub_cluster, inventory.console, "Consumes Streamed Message", "AMQP")
+
+Rel(fabric.commander.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
+Rel(fabric.commander.console, search.console, "Produces Events", "AMQP")
+Rel(inventory.commander.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
+Rel(inventory.commander.console, search.console, "Produces Events", "AMQP")
 
 
 ' Search Microservice
@@ -115,6 +129,13 @@ Rel(inventory.console, service_bus, "Produces Messages", "Message Producer")
 Rel(service_bus, search.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, fabric.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, inventory.console, "Consumes Messages", "Message Broker")
+
+' Search Microservice
+Rel(search.commander.console, service_bus, "Produces Messages", "Message Producer")
+Rel(fabric.commander.console, service_bus, "Produces Messages", "Message Producer")
+Rel(inventory.commander.console, service_bus, "Produces Messages", "Message Producer")
+Rel(service_bus, inventory.commander.console, "Consumes Messages", "Message Broker")
+
 
 Rel(service_bus, cosmos_db, "Uses", "Cosmos Database")
 ' Rel(service_bus, cosmos_postgres_db, "Uses", "Cosmos Database")
