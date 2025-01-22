@@ -58,7 +58,7 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	Container(fabric.console, "Fabric.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(inventory.console, "Inventory.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
-	
+	Container(staffdiscount.console, "StaffDiscount.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	
 	' Storage
 	AzureBlobStorage(blob_storage, "Blob Storage", "File Storage For Category, Product and Adobe data")
@@ -111,10 +111,12 @@ Rel(sap_hybris, blob_storage, "Uploads file", "HTTP/HTTPS/SDK")
 Rel(fabric.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(fabric.console, search.console, "Produces Events", "AMQP")
 Rel(inventory.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
+Rel(staffdiscount.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(inventory.console, search.console, "Produces Events", "AMQP")
 
 Rel(eventhub_cluster, fabric.console, "Consumes Streamed Message", "AMQP")
 Rel(eventhub_cluster, inventory.console, "Consumes Streamed Message", "AMQP")
+Rel(eventhub_cluster, staffdiscount.console, "Consumes Streamed Message", "AMQP")
 
 Rel(fabric.commander.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(fabric.commander.console, search.console, "Produces Events", "AMQP")
@@ -126,9 +128,11 @@ Rel(inventory.commander.console, search.console, "Produces Events", "AMQP")
 Rel(search.console, service_bus, "Produces Messages", "Message Producer")
 Rel(fabric.console, service_bus, "Produces Messages", "Message Producer")
 Rel(inventory.console, service_bus, "Produces Messages", "Message Producer")
+Rel(staffdiscount.console, service_bus, "Produces Messages", "Message Producer")
 Rel(service_bus, search.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, fabric.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, inventory.console, "Consumes Messages", "Message Broker")
+Rel(service_bus, staffdiscount.console, "Consumes Messages", "Message Broker")
 
 ' Search Microservice
 Rel(search.commander.console, service_bus, "Produces Messages", "Message Producer")
@@ -149,6 +153,7 @@ Rel(service_bus, fredhopper, "Populates", "Vendor")
 Rel(hybris_api, sap_hybris, "Uses", "HTTP Hybris API/SDK")
 Rel(hybris_api, sap_cdc, "Uses", "HTTP Hybris API/SDK")
 Rel(inventory.console, hybris_app, "Gets online stockfeed", "HTTP Request every 30 minutes")
+Rel(staffdiscount.console, hybris_api, "Sets user data for discount states", "Event driven")
 
 SHOW_DYNAMIC_LEGEND()
 
