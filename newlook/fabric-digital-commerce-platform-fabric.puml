@@ -59,6 +59,7 @@ Container_Boundary(fabric_dcp, "Fabric Digital Commerce Platform Kubernetes Work
 	Container(fabric.console, "Fabric.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(search.console, "Search.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(inventory.console, "Inventory.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
+	Container(clubmembership.console, "ClubMembership.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	Container(teamdiscount.console, "TeamDiscount.Console", "Dotnet C#", "Digital.Commerce.Platform Microservice", "dotnet")
 	
 	' Storage
@@ -124,7 +125,6 @@ Rel(fabric.commander.console, search.console, "Produces Events", "AMQP")
 Rel(inventory.commander.console, eventhub_cluster, "Produces Streamed Message", "AMQP")
 Rel(inventory.commander.console, search.console, "Produces Events", "AMQP")
 
-
 ' Search Microservice
 Rel(search.console, service_bus, "Produces Messages", "Message Producer")
 Rel(fabric.console, service_bus, "Produces Messages", "Message Producer")
@@ -134,6 +134,7 @@ Rel(service_bus, search.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, fabric.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, inventory.console, "Consumes Messages", "Message Broker")
 Rel(service_bus, teamdiscount.console, "Consumes Messages", "Message Broker")
+Rel(service_bus, clubmembership.console, "Consumes Messages", "Message Broker")
 
 ' Search Microservice
 Rel(search.commander.console, service_bus, "Produces Messages", "Message Producer")
@@ -154,8 +155,9 @@ Rel(service_bus, fredhopper, "Populates", "Vendor")
 ' SAP Hybris
 Rel(hybris_api, sap_hybris, "Uses", "HTTP Hybris API/SDK")
 Rel(hybris_api, sap_cdc, "Uses", "HTTP Hybris API/SDK")
-Rel(inventory.console, hybris_app, "Gets online stockfeed", "HTTP Request every 30 minutes")
-Rel(teamdiscount.console, hybris_api, "Sets user data for discount states", "Event driven")
+Rel(hybris_app, inventory.console, "Gets online stockfeed", "HTTP Request every 30 minutes")
+Rel(teamdiscount.console, hybris_api, "Sets New Look discount options within SAP", "AMQP")
+Rel(clubmembership.console, hybris_api, "Sets New Look club membershup options within SAP", "AMQP")
 
 SHOW_DYNAMIC_LEGEND()
 
