@@ -1,0 +1,77 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+
+' People
+Person(user, "Customer", "Browses and purchases products")
+
+' Systems
+System_Boundary(gcp_frontend, "Presentation Layer") {
+  Container(browser, "Web/Mobile Browser", "JavaScript / Mobile App", "Used by customer")
+  Container(cdn, "Cloud CDN", "GCP", "Caches frontend content")
+  Container(frontendApp, "Frontend App", "GCS / Cloud Run", "Serves static frontend or SSR content")
+}
+
+System_Boundary(gcp_api, "API & Application Layer") {
+  Container(apiGateway, "API Gateway", "Cloud API Gateway / Apigee", "Routes and secures API traffic")
+
+  Container_Boundary(magentoCore, "Commerce Core") {
+    Container(magento, "Magento (Headless)", "GKE / Compute Engine", "Handles catalogue, cart, and checkout logic")
+    Container(magentoDb, "Magento DB", "Cloud SQL (MySQL)", "Magento transactional data")
+  }
+
+  Container_Boundary(productServices, "Product Services") {
+    Container(productReadService, "Product Read/Search Service", "Vertex AI Search / Elasticsearch", "Optimised read/search API")
+    Container(productDb, "Optimised Product DB", "Firestore / Cloud SQL", "Pre-aggregated product data")
+  }
+
+  Container_Boundary(customMicroservices, "Custom Microservices") {
+    Container(authService, "Auth Service", "Firebase Auth / GKE", "User identity management")
+    Container(recommendationService, "Recommendation Engine", "Vertex AI", "Personalised suggestions")
+    Container(paymentService, "Payment Service", "GKE / Cloud Run", "Integrates with Stripe/Adyen/etc")
+    Container(otherServices, "Other Services", "Cloud Run", "Additional platform capabilities")
+  }
+}
+
+System_Boundary(integration, "Integration & Data") {
+  Container(pubsub, "Pub/Sub", "Cloud Pub/Sub", "Event streaming across systems")
+  Container(cloudFunctions, "Cloud Functions", "Cloud Functions / Workflows", "Serverless data processing and triggers")
+  Container(bigQuery, "BigQuery", "BigQuery", "Analytics, reporting, machine learning")
+}
+
+System_Boundary(enterprise, "Enterprise Systems") {
+  System_Ext(pim, "D365 - PIM", "Manages product master data")
+  System_Ext(erp, "D365 - ERP", "Handles inventory, fulfilment, order processing")
+}
+
+' Relationships
+Rel(user, browser, "Uses")
+Rel(browser, cdn, "Fetches frontend assets")
+Rel(cdn, frontendApp, "Serves content")
+Rel(frontendApp, apiGateway, "Sends API requests")
+
+Rel(apiGateway, magento, "Routes eCommerce requests")
+Rel(magento, magentoDb, "Reads/Writes")
+
+Rel(apiGateway, productReadService, "Reads")
+Rel(productReadService, productDb, "Reads")
+Rel(apiGateway, authService, "Authentication")
+Rel(apiGateway, recommendationService, "Gets recommendations")
+Rel(apiGateway, paymentService, "Processes payments")
+Rel(apiGateway, otherServices, "Calls")
+
+Rel(magento, pubsub, "Publishes order events")
+Rel(pim, cloudFunctions, "Pushes product data")
+Rel(cloudFunctions, productReadService, "Updates product index")
+Rel(cloudFunctions, pubsub, "Publishes product update events")
+Rel(erp, pubsub, "Publishes inventory and fulfilment updates")
+
+Rel(pubsub, cloudFunctions, "Triggers")
+Rel(cloudFunctions, erp, "Posts orders for fulfilment")
+Rel(cloudFunctions, magento, "Updates stock")
+Rel(cloudFunctions, productReadService, "Updates product stock")
+
+Rel(frontendApp, pubsub, "User interaction events")
+Rel(pubsub, bigQuery, "Sends event data")
+
+@enduml

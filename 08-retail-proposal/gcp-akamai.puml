@@ -1,0 +1,74 @@
+@startuml
+' Define styles
+skinparam componentStyle rectangle
+skinparam backgroundColor #ffffff
+skinparam nodeBorderColor Black
+skinparam nodeBackgroundColor #FDFEFE
+skinparam componentBorderColor Black
+skinparam componentBackgroundColor #FDFEFE
+
+' User
+actor User as "Web / Mobile Browser"
+
+' Edge layer
+node "Akamai CDN" as Akamai #D4EFDF
+
+' Presentation Layer
+node "Frontend App\n(GCS / Cloud Run)" as FrontendApp #D4EFDF
+
+' API Gateway
+node "API Gateway\n(Apigee / Cloud API Gateway)" as APIGateway #FCF3CF
+
+' Commerce Core
+node "Magento\n(GKE)" as Magento #D2E0FB
+database "Magento DB\n(Cloud SQL - MySQL)" as MagentoDB #D2E0FB
+
+' Product Services
+node "Product Read Service\n(Vertex AI Search / Elasticsearch)" as ProductReadService #DDEBF7
+database "Optimised Product DB\n(Firestore / Cloud SQL)" as OptimisedProductDB #DDEBF7
+
+' Custom Microservices
+node "Auth Service\n(Cloud Run / Firebase Auth)" as AuthService #D4EFDF
+node "Recommendation Service\n(Vertex AI)" as RecommendationService #D4EFDF
+node "Payment Service\n(Cloud Run)" as PaymentService #D4EFDF
+node "Other Custom Services\n(Cloud Run / GKE)" as OtherServices #D4EFDF
+
+' Eventing / Data Layer
+queue "Pub/Sub" as PubSub #FADBD8
+node "Cloud Functions / Workflows" as CloudFunctions #FADBD8
+database "BigQuery" as BigQuery #FADBD8
+
+' Enterprise Systems
+node "D365 PIM" as D365_PIM #E1D5E7
+node "D365 ERP" as D365_ERP #E1D5E7
+
+' Flows
+User --> Akamai
+Akamai --> FrontendApp
+FrontendApp --> APIGateway
+
+APIGateway --> Magento
+Magento --> MagentoDB
+
+APIGateway --> ProductReadService
+ProductReadService --> OptimisedProductDB
+
+APIGateway --> AuthService
+APIGateway --> RecommendationService
+APIGateway --> PaymentService
+APIGateway --> OtherServices
+
+Magento --> PubSub : "Order Events"
+FrontendApp --> PubSub : "User Events"
+ProductReadService --> PubSub : "Search Events"
+
+D365_PIM --> CloudFunctions : "Product Sync"
+D365_ERP --> PubSub : "Inventory / Order Status"
+
+PubSub --> CloudFunctions : "Triggers"
+CloudFunctions --> Magento : "Inventory Updates"
+CloudFunctions --> ProductReadService : "Product Updates"
+CloudFunctions --> D365_ERP : "Order Writes"
+
+PubSub --> BigQuery : "Analytics Events"
+@enduml

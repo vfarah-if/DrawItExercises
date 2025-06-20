@@ -1,0 +1,86 @@
+@startuml C4_Architecture
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+' !theme materia
+' !theme sketchy
+' !theme hacker
+' !theme spacelab
+' !theme vibrant
+' !theme minty
+!theme cerulean
+
+'================================================================================
+' Level 1: System Context Diagram
+'================================================================================
+title System Context Diagram for E-commerce Platform
+
+Person(user, "E-commerce Customer", "Uses the platform to browse products and make purchases.")
+
+System_Ext(d365, "Dynamics 365", "ERP (Inventory, Orders, Financials) & PIM (Product Master Data).")
+System_Ext(paymentGateway, "Payment Gateway", "Processes online payments.")
+
+System(ecommercePlatform, "Modern E-commerce Platform", "Provides frontend experience, commerce functionalities, and integrates with backend systems.")
+
+Rel(user, ecommercePlatform, "Uses", "HTTPS/Web")
+Rel(ecommercePlatform, d365, "Syncs Data with / Fulfills Orders via", "APIs, Event Streams")
+Rel(ecommercePlatform, paymentGateway, "Processes Payments via", "API")
+
+'================================================================================
+' Level 2: Container Diagram for E-commerce Platform
+'================================================================================
+LAYOUT_WITH_LEGEND()
+' LAYOUT_AS_SKETCH()
+
+Container_Boundary(gcp_platform, "E-commerce Platform on GCP") {
+    title Container Diagram for E-commerce Platform
+
+    Container(frontendApp, "Frontend Application", "Next.js/Vue.js (SSR/SSG)", "Delivers the user interface. Hosted on Cloud Run or GCS+CDN.")
+    Container(apiGateway, "API Gateway", "Google Cloud API Gateway / Apigee", "Single entry point for all frontend requests to backend services.")
+
+    ContainerDb(magentoDB, "Magento Database", "Cloud SQL for MySQL", "Stores Magento's core commerce data (products, customers, orders pre-ERP sync).")
+    Container(magentoHeadless, "Headless Magento", "PHP/Magento (GKE/Compute Engine)", "Core commerce engine (cart, checkout, promotions). Exposes APIs.")
+
+    ContainerDb(productReadDB, "Optimised Product DB", "Firestore / Cloud SQL / Vertex AI Search Index", "Fast read-access for product catalog, synced from D365 PIM.")
+    Container(productReadService, "Product Read Service", "Java/Node.js/Python (Cloud Run/GKE)", "Serves product data to frontend. Includes search (e.g., Vertex AI Search or Elasticsearch).")
+
+    Container(authService, "Authentication Service", "Node.js/Go (Cloud Run/GKE) or Firebase Auth", "Manages user authentication and authorization.")
+    Container(recommendationService, "Recommendation Service", "Python (Vertex AI Recommendations API)", "Provides product recommendations.")
+    Container(paymentIntegrationService, "Payment Integration Service", "Java/Node.js (Cloud Run/GKE)", "Integrates with external payment gateways.")
+    Container(otherMicroservices, "Other Supporting Microservices", "Various (Cloud Run/GKE)", "Handles other specific business logic (e.g., notifications, reviews).")
+
+    ContainerQueue(pubSub, "Event Bus", "Google Cloud Pub/Sub", "Decouples services via asynchronous event-driven communication.")
+    Container(integrationFunctions, "Integration Functions/Workflows", "Cloud Functions / Workflows", "Handles data synchronization and event processing logic between systems.")
+    ContainerDb(bigQuery, "Data Warehouse", "Google BigQuery", "Stores analytical data, fed by events from Pub/Sub.")
+
+    Rel(user, frontendApp, "Interacts with", "HTTPS")
+    Rel(frontendApp, apiGateway, "Makes API calls to", "HTTPS/gRPC")
+
+    Rel(apiGateway, magentoHeadless, "Routes commerce requests to")
+    Rel(apiGateway, productReadService, "Routes product requests to")
+    Rel(apiGateway, authService, "Routes auth requests to")
+    Rel(apiGateway, recommendationService, "Routes recommendation requests to")
+    Rel(apiGateway, paymentIntegrationService, "Routes payment requests to")
+    Rel(apiGateway, otherMicroservices, "Routes other requests to")
+
+    Rel(magentoHeadless, magentoDB, "Reads/Writes", "SQL")
+    Rel(magentoHeadless, pubSub, "Publishes order & commerce events to")
+
+    Rel(productReadService, productReadDB, "Reads from")
+    Rel(integrationFunctions, productReadDB, "Writes synced product data to") ' D365 PIM -> Functions -> ProductReadDB
+
+    Rel(integrationFunctions, pubSub, "Subscribes to & Publishes events")
+    Rel(pubSub, bigQuery, "Streams events to")
+    Rel(pubSub, integrationFunctions, "Triggers") ' For D365 ERP sync
+
+    ' Relationships to External Systems (from containers)
+    Rel(integrationFunctions, d365, "Syncs Product Data from / Sends Orders to / Gets Inventory from", "API")
+    Rel(magentoHeadless, d365, "Receives Inventory Updates via Integration Layer", "Indirectly via PubSub/Functions")
+    Rel(paymentIntegrationService, paymentGateway, "Delegates payment processing to", "API")
+}
+
+' Overall relationships from boundary to external systems (already defined in context, but can be reiterated for clarity if needed)
+Rel(apiGateway, d365, "Exchanges Data with", "APIs, Event Streams")
+Rel(apiGateway, paymentGateway, "Processes Payments via", "API")
+
+@enduml
